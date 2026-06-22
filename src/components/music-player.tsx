@@ -60,7 +60,7 @@ export default function MusicPlayer() {
   return (
     <button
       onClick={toggle}
-      className="fixed top-4 right-16 z-[9999] w-10 h-10 flex items-center justify-center rounded-full border border-[var(--mag)]/30 bg-[var(--ink2)] hover:bg-[var(--mag-dim)] transition-all hover:scale-110"
+      className="fixed top-4 right-4 z-[9999] w-10 h-10 flex items-center justify-center rounded-full border border-[var(--mag)]/30 bg-[var(--ink2)] hover:bg-[var(--mag-dim)] transition-all hover:scale-110"
       title={playing ? "Detener música" : "Iniciar música"}
     >
       <span className="text-[var(--parch-mid)] text-lg leading-none">
