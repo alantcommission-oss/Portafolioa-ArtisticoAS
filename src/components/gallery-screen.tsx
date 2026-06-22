@@ -57,12 +57,15 @@ export default function GalleryScreen({ onBack }: Props) {
   const allTags = [...new Set(artworks.flatMap((a) => a.tags))].sort();
   const filtered = activeTag ? artworks.filter((a) => a.tags.includes(activeTag)) : artworks;
 
+  const prevOverflow = useRef("");
   useEffect(() => {
     if (selected) {
+      prevOverflow.current = document.body.style.overflow;
       document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = prevOverflow.current;
     }
+    return () => { document.body.style.overflow = prevOverflow.current; };
   }, [selected]);
 
   function openDetail(art: Artwork) {
@@ -94,8 +97,8 @@ export default function GalleryScreen({ onBack }: Props) {
   }
 
   return (
-    <div className="page visible z-10 overflow-y-auto">
-      <div className="min-h-screen flex flex-col">
+    <div className="page visible z-10 overflow-y-auto !items-start">
+      <div className="min-h-[calc(100vh-1px)] flex flex-col">
         {/* top bar */}
         <div className="flex items-center gap-4 px-6 pt-6 pb-2 shrink-0">
           <button onClick={onBack} className="isaac-btn !text-[14px] !px-4 !py-2">
