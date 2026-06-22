@@ -10,6 +10,7 @@ import ContactsScreen from "@/components/contacts-screen";
 import CursorFollower from "@/components/cursor-follower";
 import KeyboardTutorial from "@/components/keyboard-tutorial";
 import CollectibleGame from "@/components/collectible-game";
+import MusicPlayer from "@/components/music-player";
 import ThemeToggle from "@/components/theme-toggle";
 import { useLang } from "@/lib/i18n/language-context";
 
@@ -41,6 +42,7 @@ export default function Home() {
       {screen === "gallery" && <GalleryScreen onBack={() => navigate("menu")} />}
       {screen === "contacts" && <ContactsScreen onBack={() => navigate("menu")} />}
 
+      <MusicPlayer />
       <ThemeToggle />
       <div className="max-md:hidden">
         <CursorFollower />
