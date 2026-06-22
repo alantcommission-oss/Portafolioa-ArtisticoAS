@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const email = "admin@alantart.dev";
-  const password = "admin123";
+  const password = "5369dos";
 
   // Verify existing admin
   const existing = await prisma.admin.findUnique({ where: { email } });
