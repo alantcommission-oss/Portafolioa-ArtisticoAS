@@ -7,6 +7,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -59,14 +60,20 @@ export default function AdminLoginPage() {
             <label htmlFor="password" className="block font-heading text-sm text-foreground/80 mb-1">
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-muted border border-border rounded px-3 py-2 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-accent"
-              required
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPw ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-muted border border-border rounded px-3 py-2 pr-10 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-accent"
+                required
+              />
+              <button type="button" onClick={() => setShowPw(!showPw)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-foreground/50 hover:text-foreground text-sm">
+                {showPw ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
           {error && (
             <p className="text-destructive text-sm font-body text-center">{error}</p>
