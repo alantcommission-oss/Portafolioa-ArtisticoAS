@@ -34,7 +34,7 @@ export default function GalleryScreen({ onBack }: Props) {
   const [activeTag, setActiveTag] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/admin/artworks")
+    fetch("/api/gallery")
       .then((r) => r.ok ? r.json() : [])
       .then((data: Artwork[]) => {
         const shuffled = shuffle(data);
