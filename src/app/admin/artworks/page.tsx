@@ -150,6 +150,11 @@ export default function AdminArtworksPage() {
         <button
           onClick={openCreate}
           className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white font-heading text-sm tracking-wider uppercase rounded transition-all duration-200 hover:bg-accent/80 hover:scale-105 active:scale-95 shadow-lg shadow-accent/20"
+          disabled={artworks.length >= 60}
+        >
+          <Plus size={18} />
+          Add Artwork
+        </button>
       </div>
 
       {/* Error message */}
