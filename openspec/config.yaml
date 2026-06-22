@@ -1,0 +1,51 @@
+# alantart-portfolio — SDD Configuration
+# Generated: 2026-06-21
+# Mode: hybrid (Engram + filesystem)
+
+context: |
+  Next.js 16 portfolio rebuild from static HTML. Dark fantasy theme, furry artist
+  portfolio. Neon (PostgreSQL) for data, Render for deployment. shadcn/ui with
+  Tailwind CSS v4. No test runner configured yet.
+
+strict_tdd: false
+# Strict TDD is disabled because no test runner is installed. Add Vitest or Jest
+# before enabling.
+
+testing:
+  runner: null
+  runner_command: null
+  layers:
+    unit: false
+    integration: false
+    e2e: false
+  coverage: false
+  coverage_command: null
+  linter: eslint
+  linter_command: npm run lint
+  type_checker: typescript
+  type_checker_command: npx tsc --noEmit
+  formatter: null
+  formatter_command: null
+
+phases:
+  propose:
+    required: true
+    artifacts: proposal.md
+  spec:
+    required: true
+    artifacts: spec.md
+  design:
+    required: true
+    artifacts: design.md
+  tasks:
+    required: true
+    artifacts: tasks.md
+  apply:
+    required: true
+    artifacts: null
+  verify:
+    required: true
+    artifacts: null
+  archive:
+    required: true
+    artifacts: null
