@@ -111,7 +111,7 @@ export default function GalleryScreen({ onBack }: Props) {
             {t("gallery_empty")}
           </p>
         ) : (
-          <div className="flex-1 flex flex-col md:flex-row px-4 pb-10 gap-4">
+          <div className="flex-1 flex flex-col md:flex-row px-4 pb-10 gap-4 max-w-4xl mx-auto w-full">
             {/* tag filter — left column on desktop, horizontal scroll on mobile */}
             {allTags.length > 0 && (
               <aside className="md:w-28 md:shrink-0 md:sticky md:top-4 md:self-start">
