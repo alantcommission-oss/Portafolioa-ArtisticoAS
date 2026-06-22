@@ -45,7 +45,12 @@ export default function AdminLayout({
             Messages
           </Link>
         </nav>
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border space-y-1">
+          <a href="/"
+            className="flex items-center gap-3 px-3 py-2 text-sm font-body text-foreground/70 hover:text-accent hover:bg-muted rounded transition-colors w-full"
+          >
+            ← Volver al sitio
+          </a>
           <form action="/api/admin/logout" method="POST">
             <button
               type="submit"
@@ -92,6 +97,11 @@ export default function AdminLayout({
             >
               Messages
             </Link>
+            <a href="/"
+              className="block px-3 py-2 text-sm font-body text-foreground/70 hover:text-accent rounded"
+            >
+              ← Volver al sitio
+            </a>
             <form action="/api/admin/logout" method="POST">
               <button
                 type="submit"
