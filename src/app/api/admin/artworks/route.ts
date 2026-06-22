@@ -27,11 +27,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check capacity limit (max 24)
+    // Check capacity limit (max 60)
     const count = await prisma.artwork.count();
-    if (count >= 24) {
+    if (count >= 60) {
       return NextResponse.json(
-        { error: "Gallery capacity reached (max 24 artworks)" },
+        { error: "Gallery capacity reached (max 60 artworks)" },
         { status: 400 }
       );
     }

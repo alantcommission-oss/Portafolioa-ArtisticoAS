@@ -17,11 +17,12 @@ export default function AdminArtworksPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Artwork | null>(null);
+  const tagOptions = ["sombra", "color", "cuerpo completo", "sticker", "obsceno"];
   const [form, setForm] = useState({
     title: "",
     description: "",
     imageUrl: "",
-    tags: "",
+    tags: [] as string[],
   });
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -46,7 +47,7 @@ export default function AdminArtworksPage() {
 
   function openCreate() {
     setEditing(null);
-    setForm({ title: "", description: "", imageUrl: "", tags: "" });
+    setForm({ title: "", description: "", imageUrl: "", tags: [] });
     setShowForm(true);
     setError("");
   }
@@ -57,7 +58,7 @@ export default function AdminArtworksPage() {
       title: art.title,
       description: art.description ?? "",
       imageUrl: art.imageUrl,
-      tags: art.tags.join(", "),
+      tags: art.tags,
     });
     setShowForm(true);
     setError("");
@@ -82,16 +83,11 @@ export default function AdminArtworksPage() {
     e.preventDefault();
     setError("");
 
-    const tags = form.tags
-      .split(",")
-      .map((t) => t.trim())
-      .filter(Boolean);
-
     const payload = {
       title: form.title,
       description: form.description || null,
       imageUrl: form.imageUrl,
-      tags,
+      tags: form.tags,
     };
 
     try {
@@ -154,7 +150,7 @@ export default function AdminArtworksPage() {
         <button
           onClick={openCreate}
           className="flex items-center gap-2 px-4 py-2 bg-accent text-white font-heading text-sm tracking-wider uppercase transition-all hover:bg-accent/80"
-          disabled={artworks.length >= 24}
+          disabled={artworks.length >= 60}
         >
           <Plus size={16} />
           Add Artwork
@@ -170,8 +166,8 @@ export default function AdminArtworksPage() {
 
       {/* Form dialog */}
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-card border border-border rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+          <div className="bg-[#0f0a14] border border-[#b30089]/40 rounded-lg p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-[0_0_30px_rgba(179,0,137,0.15)]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-heading text-lg text-accent">
                 {editing ? "Edit Artwork" : "New Artwork"}
@@ -231,15 +227,34 @@ export default function AdminArtworksPage() {
               </div>
               <div>
                 <label className="block font-heading text-sm text-foreground/80 mb-1">
-                  Tags (comma separated)
+                  Tags
                 </label>
-                <input
-                  type="text"
-                  value={form.tags}
-                  onChange={(e) => setForm({ ...form, tags: e.target.value })}
-                  className="w-full bg-muted border border-border rounded px-3 py-2 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-accent"
-                  placeholder="e.g. character, digital, portrait"
-                />
+                <div className="flex flex-wrap gap-2">
+                  {tagOptions.map((tag) => {
+                    const active = form.tags.includes(tag);
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() =>
+                          setForm({
+                            ...form,
+                            tags: active
+                              ? form.tags.filter((t) => t !== tag)
+                              : [...form.tags, tag],
+                          })
+                        }
+                        className={`px-3 py-1.5 text-xs tracking-wider uppercase font-heading rounded border transition-all ${
+                          active
+                            ? "bg-accent text-white border-accent"
+                            : "bg-transparent text-foreground/60 border-foreground/20 hover:border-accent/50 hover:text-accent"
+                        }`}
+                      >
+                        {tag}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
               <div className="flex gap-3 pt-2">
                 <button
