@@ -149,12 +149,7 @@ export default function AdminArtworksPage() {
         </h1>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-accent text-white font-heading text-sm tracking-wider uppercase transition-all hover:bg-accent/80"
-          disabled={artworks.length >= 60}
-        >
-          <Plus size={16} />
-          Add Artwork
-        </button>
+          className="flex items-center gap-2 px-5 py-2.5 bg-accent text-white font-heading text-sm tracking-wider uppercase rounded transition-all duration-200 hover:bg-accent/80 hover:scale-105 active:scale-95 shadow-lg shadow-accent/20"
       </div>
 
       {/* Error message */}
@@ -174,9 +169,9 @@ export default function AdminArtworksPage() {
               </h2>
               <button
                 onClick={() => setShowForm(false)}
-                className="text-foreground/60 hover:text-foreground"
+                className="text-foreground/60 hover:text-foreground hover:scale-110 transition-all duration-150 active:scale-90"
               >
-                <X size={20} />
+                <X size={22} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -220,8 +215,8 @@ export default function AdminArtworksPage() {
                     required
                   />
                   <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
-                    className="px-3 py-2 bg-accent/20 text-accent font-heading text-sm tracking-wider uppercase rounded hover:bg-accent/30 transition-all disabled:opacity-50 flex items-center gap-1">
-                    <Upload size={14} /> {uploading ? "..." : "Subir"}
+                    className="px-4 py-2 bg-accent/20 text-accent font-heading text-sm tracking-wider uppercase rounded transition-all duration-150 hover:bg-accent/30 hover:scale-105 active:scale-95 disabled:opacity-50 flex items-center gap-1.5">
+                    <Upload size={16} /> {uploading ? "..." : "Subir"}
                   </button>
                 </div>
               </div>
@@ -259,14 +254,14 @@ export default function AdminArtworksPage() {
               <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-accent text-white font-heading text-sm tracking-wider uppercase transition-all hover:bg-accent/80"
+                  className="flex-1 py-2.5 bg-accent text-white font-heading text-sm tracking-wider uppercase rounded transition-all duration-150 hover:bg-accent/80 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-accent/20"
                 >
                   {editing ? "Update" : "Create"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 border border-border text-foreground/70 font-heading text-sm tracking-wider uppercase transition-all hover:bg-muted"
+                  className="flex-1 py-2.5 border border-border text-foreground/70 font-heading text-sm tracking-wider uppercase rounded transition-all duration-150 hover:bg-muted hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Cancel
                 </button>
@@ -335,14 +330,14 @@ export default function AdminArtworksPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => openEdit(art)}
-                        className="p-1.5 text-foreground/60 hover:text-accent transition-colors"
+                        className="p-2 text-foreground/60 hover:text-accent hover:bg-accent/10 rounded transition-all duration-150 hover:scale-110 active:scale-95"
                         title="Edit"
                       >
                         <Pencil size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(art.id)}
-                        className="p-1.5 text-foreground/60 hover:text-destructive transition-colors"
+                        className="p-2 text-foreground/60 hover:text-destructive hover:bg-destructive/10 rounded transition-all duration-150 hover:scale-110 active:scale-95"
                         title="Delete"
                       >
                         <Trash2 size={16} />

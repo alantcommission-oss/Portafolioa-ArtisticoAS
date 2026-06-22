@@ -51,12 +51,32 @@ export default function GalleryScreen({ onBack }: Props) {
     setRelated(shuffle(others).slice(0, 8));
   }
 
+  function isRevealed(id: string) {
+    return revealed.has(id);
+  }
+
+  function reveal(id: string) {
+    setRevealed((prev) => new Set(prev).add(id));
+  }
+
+  function ObscenoOverlay({ id, show }: { id: string; show: boolean }) {
+    if (!show) return null;
+    return (
+      <button
+        onClick={(e) => { e.stopPropagation(); reveal(id); }}
+        className="absolute inset-0 flex items-center justify-center w-full z-10"
+      >
+        <span className="text-[11px] tracking-[3px] text-white/70 uppercase font-heading bg-black/50 px-4 py-2 rounded border border-white/20">
+          {t("obsceno_click")}
+        </span>
+      </button>
+    );
+  }
+
   return (
-    <div className="page visible flex flex-col items-center z-10 px-4 overflow-y-auto py-10">
-      <button onClick={onBack}
-        className="fixed top-4 left-4 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ink2)] border border-[var(--mag)]/30 text-[var(--mag)] hover:bg-[var(--mag)] hover:text-[var(--ink)] transition-all opacity-50 hover:opacity-100 text-lg"
-        title={t("back")}>
-        ←
+    <div className={`page visible flex flex-col items-center z-10 px-4 py-10 ${selected ? "overflow-hidden" : "overflow-y-auto"}`}>
+      <button onClick={onBack} className="isaac-btn !text-[14px] !px-4 !py-2 mb-6 self-start">
+        ← {t("back")}
       </button>
       <div className="w-full max-w-5xl">
         <div className="text-center mb-8">
@@ -103,28 +123,22 @@ export default function GalleryScreen({ onBack }: Props) {
             {/* masonry grid */}
             <div className="gallery-masonry">
               {filtered.map((art) => {
-                const isObscene = art.tags.includes("obsceno");
-                const isRevealed = revealed.has(art.id);
+                const obsceno = art.tags.includes("obsceno");
+                const shown = isRevealed(art.id);
                 return (
                   <div
                     key={art.id}
-                    onClick={() => isObscene && !isRevealed ? setRevealed(prev => new Set(prev).add(art.id)) : openDetail(art)}
+                    onClick={() => obsceno && !shown ? reveal(art.id) : openDetail(art)}
                     className="break-inside-avoid rounded border border-[#2a1a20] hover:border-[var(--mag)] hover:scale-[1.4] hover:z-10 transition-all duration-300 cursor-pointer group relative"
                   >
                     <div className="relative rounded overflow-hidden">
                       <img
                         src={art.imageUrl}
                         alt={art.title}
-                        className={`w-full h-auto object-cover ${isObscene && !isRevealed ? "blur-xl brightness-50" : ""}`}
+                        className={`w-full h-auto object-cover ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
                         loading="lazy"
                       />
-                      {isObscene && !isRevealed && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-[11px] tracking-[3px] text-white/70 uppercase font-heading bg-black/50 px-4 py-2 rounded border border-white/20">
-                            {t("obsceno_click")}
-                          </span>
-                        </div>
-                      )}
+                      <ObscenoOverlay id={art.id} show={obsceno && !shown} />
                     </div>
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-end p-3">
                       <span className="font-heading text-[10px] tracking-[2px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
@@ -141,14 +155,20 @@ export default function GalleryScreen({ onBack }: Props) {
               <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 p-4" onClick={() => setSelected(null)}>
                 <div className="bg-[var(--ink)] border border-[var(--mag)]/30 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                   <div className="relative">
-                    <img src={selected.imageUrl} alt={selected.title} className={`w-full object-cover max-h-[50vh] rounded-t-lg ${selected.tags.includes("obsceno") ? "blur-xl brightness-50" : ""}`} />
-                    {selected.tags.includes("obsceno") && (
-                      <button onClick={() => setRevealed(prev => new Set(prev).add(selected.id))} className="absolute inset-0 flex items-center justify-center w-full">
-                        <span className="text-[11px] tracking-[3px] text-white/70 uppercase font-heading bg-black/50 px-4 py-2 rounded border border-white/20">
-                          {t("obsceno_click")}
-                        </span>
-                      </button>
-                    )}
+                    {(() => {
+                      const obsceno = selected.tags.includes("obsceno");
+                      const shown = isRevealed(selected.id);
+                      return (
+                        <>
+                          <img
+                            src={selected.imageUrl}
+                            alt={selected.title}
+                            className={`w-full object-cover max-h-[50vh] rounded-t-lg ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
+                          />
+                          <ObscenoOverlay id={selected.id} show={obsceno && !shown} />
+                        </>
+                      );
+                    })()}
                   </div>
                   <div className="p-5">
                     <div className="flex items-center justify-between mb-2">
@@ -169,12 +189,27 @@ export default function GalleryScreen({ onBack }: Props) {
                       <div>
                         <p className="font-heading text-[11px] tracking-[3px] text-[var(--text-faint)] uppercase mb-3">{t("gallery_related")}</p>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                          {related.map((r) => (
-                            <button key={r.id} onClick={() => openDetail(r)}
-                              className="rounded overflow-hidden border border-[#2a1a20] hover:border-[var(--mag)] hover:scale-110 transition-all duration-300">
-                              <img src={r.imageUrl} alt={r.title} className="w-full aspect-square object-cover" />
-                            </button>
-                          ))}
+                          {related.map((r) => {
+                            const obsceno = r.tags.includes("obsceno");
+                            const shown = isRevealed(r.id);
+                            return (
+                              <button
+                                key={r.id}
+                                onClick={() => {
+                                  if (obsceno && !shown) { reveal(r.id); return; }
+                                  openDetail(r);
+                                }}
+                                className="relative rounded overflow-hidden border border-[#2a1a20] hover:border-[var(--mag)] hover:scale-110 transition-all duration-300"
+                              >
+                                <img
+                                  src={r.imageUrl}
+                                  alt={r.title}
+                                  className={`w-full aspect-square object-cover ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
+                                />
+                                <ObscenoOverlay id={r.id} show={obsceno && !shown} />
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     )}

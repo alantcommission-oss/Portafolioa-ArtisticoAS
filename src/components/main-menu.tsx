@@ -26,7 +26,7 @@ export default function MainMenu({ onSelect, onBack }: Props) {
         </button>
 
         <div className="text-center mb-10">
-          <h2 className="font-heading text-xl tracking-[6px] text-[var(--mag)] uppercase">
+          <h2 className="font-heading text-3xl tracking-[6px] text-[var(--mag)] uppercase">
             Alant<span className="text-[var(--parch)]">Art</span>
           </h2>
           <div className="mag-divider mt-2" />

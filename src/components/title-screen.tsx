@@ -19,14 +19,14 @@ export default function TitleScreen({ onStart }: { onStart: () => void }) {
 
       {/* title */}
       <div className="text-center space-y-3">
-        <p className="font-heading text-[13px] tracking-[6px] text-[var(--mag)] uppercase">
+        <p className="font-heading text-[18px] tracking-[6px] text-[var(--mag)] uppercase">
           Portafolio de Dibujos
         </p>
-        <h1 className="font-heading text-[clamp(42px,7vw,60px)] font-black tracking-[4px] text-[var(--parch)] leading-none">
+        <h1 className="font-heading text-[clamp(58px,9vw,84px)] font-black tracking-[4px] text-[var(--parch)] leading-none">
           Alant<span className="text-[var(--mag)]">Art</span>
         </h1>
         <div className="mag-divider !w-[140px]" />
-        <p className="text-[16px] tracking-[3px] text-[var(--text-faint)] italic">
+        <p className="text-[22px] tracking-[3px] text-[var(--text-faint)] italic">
           {t("subtitle")}
         </p>
       </div>

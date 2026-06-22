@@ -7,6 +7,7 @@ import MainMenu from "@/components/main-menu";
 import CommissionsScreen from "@/components/commissions-screen";
 import GalleryScreen from "@/components/gallery-screen";
 import ContactsScreen from "@/components/contacts-screen";
+import CursorFollower from "@/components/cursor-follower";
 import { useLang } from "@/lib/i18n/language-context";
 
 type Screen = "title" | "menu" | "comm-dibujo" | "comm-pagina" | "gallery" | "contacts";
@@ -37,6 +38,7 @@ export default function Home() {
       {screen === "gallery" && <GalleryScreen onBack={() => navigate("menu")} />}
       {screen === "contacts" && <ContactsScreen onBack={() => navigate("menu")} />}
 
+      <CursorFollower />
       <a
         href="/admin"
         className="fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ink2)] border border-[var(--mag)]/30 text-[var(--mag)] hover:bg-[var(--mag)] hover:text-[var(--ink)] transition-all opacity-50 hover:opacity-100 text-lg"

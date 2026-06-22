@@ -88,7 +88,7 @@ a, button, input, textarea, select, summary {
 /* ── isaac-style menu text ── */
 .isaac-btn {
   font-family: var(--font-heading);
-  font-size: 15px;
+  font-size: 21px;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--parch-mid);
@@ -113,7 +113,7 @@ a, button, input, textarea, select, summary {
 
 .isaac-btn.primary {
   color: var(--mag);
-  font-size: 18px;
+  font-size: 25px;
 }
 .isaac-btn.primary::before { background: var(--mag); height: 1px; }
 .isaac-btn.primary:hover { color: #cc00a0; text-shadow: 0 0 16px var(--mag-glow); }
@@ -178,7 +178,7 @@ a, button, input, textarea, select, summary {
 .menu-item:hover .menu-dot { background: var(--mag); box-shadow: 0 0 8px var(--mag-glow); }
 .menu-item .menu-label {
   font-family: var(--font-heading);
-  font-size: 17px; letter-spacing: 4px;
+  font-size: 24px; letter-spacing: 4px;
   color: var(--parch-mid);
   text-transform: uppercase;
   transition: color 0.2s;
@@ -212,7 +212,7 @@ a, button, input, textarea, select, summary {
 .submenu .sub-item:hover::before { color: var(--mag); }
 .submenu .sub-item .sub-label {
   font-family: var(--font-heading);
-  font-size: 15px; letter-spacing: 3px;
+  font-size: 21px; letter-spacing: 3px;
   color: var(--text-faint);
   transition: color 0.2s;
 }
