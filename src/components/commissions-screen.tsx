@@ -34,6 +34,9 @@ function BodyIcon({ type }: { type: string }) {
   if (type === "half") {
     return <svg width={s} height={s} viewBox="0 0 32 32"><circle cx="16" cy="8" r="6" fill="none" stroke="#b30089" strokeWidth="1.2"/><rect x="8" y="14" width="16" height="14" rx="2" fill="none" stroke="#b30089" strokeWidth="1"/></svg>;
   }
+  if (type === "multi") {
+    return <svg width={s} height={s} viewBox="0 0 32 32"><circle cx="10" cy="7" r="4" fill="none" stroke="#b30089" strokeWidth="1.2"/><circle cx="22" cy="7" r="4" fill="none" stroke="#b30089" strokeWidth="1.2"/><rect x="5" y="12" width="10" height="10" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/><rect x="17" y="12" width="10" height="10" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/></svg>;
+  }
   return <svg width={s} height={s} viewBox="0 0 32 32"><circle cx="16" cy="6" r="5" fill="none" stroke="#b30089" strokeWidth="1.2"/><rect x="10" y="11" width="12" height="10" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/><rect x="10" y="21" width="5" height="9" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/><rect x="17" y="21" width="5" height="9" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/></svg>;
 }
 
@@ -110,6 +113,7 @@ export default function CommissionsScreen({ onBack, type }: Props) {
       { id: "head", label: t("comm_head"), sub: t("comm_head_desc"), price: t("comm_headtip") },
       { id: "half", label: t("comm_half"), sub: t("comm_half_desc"), price: t("comm_halftip") },
       { id: "full", label: t("comm_full"), sub: t("comm_full_desc"), price: t("comm_fulltip") },
+      { id: "multi", label: t("comm_multi"), sub: t("comm_multi_desc"), price: t("comm_multitip") },
     ];
 
     return (

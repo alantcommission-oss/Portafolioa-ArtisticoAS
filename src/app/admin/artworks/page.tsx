@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { useState, useEffect, FormEvent, useRef } from "react";
+import { Plus, Pencil, Trash2, X, Upload } from "lucide-react";
 
 interface Artwork {
   id: string;
@@ -23,7 +23,9 @@ export default function AdminArtworksPage() {
     imageUrl: "",
     tags: "",
   });
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
 
   async function fetchArtworks() {
     try {
@@ -59,6 +61,21 @@ export default function AdminArtworksPage() {
     });
     setShowForm(true);
     setError("");
+  }
+
+  async function handleUpload(files: FileList | null) {
+    const file = files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      if (res.ok) {
+        const data = await res.json();
+        setForm({ ...form, imageUrl: data.url });
+      }
+    } catch { /* ignore */ } finally { setUploading(false); }
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -194,17 +211,23 @@ export default function AdminArtworksPage() {
               </div>
               <div>
                 <label className="block font-heading text-sm text-foreground/80 mb-1">
-                  Image URL *
+                  Image
                 </label>
-                <input
-                  type="text"
-                  value={form.imageUrl}
-                  onChange={(e) =>
-                    setForm({ ...form, imageUrl: e.target.value })
-                  }
-                  className="w-full bg-muted border border-border rounded px-3 py-2 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-accent"
-                  required
-                />
+                <input ref={fileRef} type="file" accept="image/*" onChange={(e) => handleUpload(e.target.files)} className="hidden" />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={form.imageUrl}
+                    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                    placeholder="O pegar URL..."
+                    className="flex-1 bg-muted border border-border rounded px-3 py-2 text-foreground font-body focus:outline-none focus:ring-2 focus:ring-accent"
+                    required
+                  />
+                  <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading}
+                    className="px-3 py-2 bg-accent/20 text-accent font-heading text-sm tracking-wider uppercase rounded hover:bg-accent/30 transition-all disabled:opacity-50 flex items-center gap-1">
+                    <Upload size={14} /> {uploading ? "..." : "Subir"}
+                  </button>
+                </div>
               </div>
               <div>
                 <label className="block font-heading text-sm text-foreground/80 mb-1">
