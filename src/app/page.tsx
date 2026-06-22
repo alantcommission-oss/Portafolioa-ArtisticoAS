@@ -15,41 +15,54 @@ import MusicPlayer from "@/components/music-player";
 import ThemeToggle from "@/components/theme-toggle";
 import { useLang } from "@/lib/i18n/language-context";
 
-type Screen = "title" | "game" | "menu" | "comm-dibujo" | "comm-pagina" | "gallery" | "contacts";
+type Screen = "title" | "menu" | "comm-dibujo" | "comm-pagina" | "gallery" | "contacts";
 
 export default function Home() {
   const { t } = useLang();
   const [screen, setScreen] = useState<Screen>("title");
+  const [showGame, setShowGame] = useState(false);
+  const [gameCount, setGameCount] = useState(0);
 
-  const navigate = (s: Screen) => setScreen(s);
+  const navigate = (s: Screen) => {
+    setShowGame(false);
+    setScreen(s);
+  };
 
   return (
     <>
       <ParticleBg />
-      {screen === "title" && <TitleScreen onStart={() => navigate("menu")} />}
-      {screen === "game" && <GameMode onBack={() => navigate("title")} />}
-      {screen === "menu" && (
+      {!showGame && screen === "title" && <TitleScreen onStart={() => navigate("menu")} />}
+      {!showGame && screen === "menu" && (
         <MainMenu
           onSelect={(id) => {
             if (id === "comm-dibujo") navigate("comm-dibujo");
             else if (id === "comm-pagina") navigate("comm-pagina");
             else if (id === "gallery") navigate("gallery");
             else if (id === "contacts") navigate("contacts");
-            else if (id === "game") navigate("game");
+            else if (id === "game") {
+              setShowGame(true);
+              setGameCount(0);
+            }
           }}
           onBack={() => navigate("title")}
         />
       )}
-      {screen === "comm-dibujo" && <CommissionsScreen type="dibujo" onBack={() => navigate("menu")} />}
-      {screen === "comm-pagina" && <CommissionsScreen type="pagina" onBack={() => navigate("menu")} />}
-      {screen === "gallery" && <GalleryScreen onBack={() => navigate("menu")} />}
-      {screen === "contacts" && <ContactsScreen onBack={() => navigate("menu")} />}
+      {!showGame && screen === "comm-dibujo" && <CommissionsScreen type="dibujo" onBack={() => navigate("menu")} />}
+      {!showGame && screen === "comm-pagina" && <CommissionsScreen type="pagina" onBack={() => navigate("menu")} />}
+      {!showGame && screen === "gallery" && <GalleryScreen onBack={() => navigate("menu")} />}
+      {!showGame && screen === "contacts" && <ContactsScreen onBack={() => navigate("menu")} />}
+
+      {showGame && (
+        <>
+          <GameMode onBack={() => { setShowGame(false); setScreen("menu"); }} count={gameCount} />
+          <CollectibleGame onCollect={() => setGameCount((c) => c + 1)} />
+        </>
+      )}
 
       <MusicPlayer />
       <ThemeToggle />
       <CursorFollower />
       <KeyboardTutorial />
-      <CollectibleGame />
       <a
         href="/admin"
         className="fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ink2)] border border-[var(--mag)]/30 text-[var(--mag)] hover:bg-[var(--mag)] hover:text-[var(--ink)] transition-all opacity-50 hover:opacity-100 text-lg"

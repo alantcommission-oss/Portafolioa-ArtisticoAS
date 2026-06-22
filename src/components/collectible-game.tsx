@@ -34,16 +34,14 @@ function randPos() {
 
 const COLLECT_DIST = 7;
 
-export default function CollectibleGame() {
-  const [count, setCount] = useState(0);
+interface Props {
+  onCollect?: () => void;
+}
+
+export default function CollectibleGame({ onCollect }: Props) {
   const [ball, setBall] = useState(randPos);
   const ballRef = useRef(ball);
   const [pop, setPop] = useState(false);
-  const [showHint, setShowHint] = useState(true);
-
-  useEffect(() => {
-    setShowHint(false);
-  }, []);
 
   useEffect(() => {
     let raf: number;
@@ -55,10 +53,10 @@ export default function CollectibleGame() {
       const dy = cy - (b.y + 0.5);
       if (dx * dx + dy * dy < COLLECT_DIST * COLLECT_DIST) {
         playCollectSound();
+        onCollect?.();
         const next = randPos();
         ballRef.current = next;
         setBall(next);
-        setCount((c) => c + 1);
         setPop(true);
         setTimeout(() => setPop(false), 200);
       }
@@ -66,7 +64,7 @@ export default function CollectibleGame() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [onCollect]);
 
   return (
     <>
@@ -83,21 +81,6 @@ export default function CollectibleGame() {
             boxShadow: "0 0 10px rgba(0,200,0,0.7)",
           }}
         />
-      </div>
-      {showHint && (
-        <div
-          className="fixed pointer-events-none z-[9998] animate-bounce"
-          style={{
-            left: `${ball.x + 0.5}%`,
-            top: `${ball.y - 3}%`,
-            transform: "translate(-50%, -100%)",
-          }}
-        >
-          <span className="text-[10px] text-[var(--text-faint)] font-heading tracking-[1px] whitespace-nowrap">▼ el pajaro puede comerlo</span>
-        </div>
-      )}
-      <div className="fixed top-4 left-4 z-[9999] font-heading text-xs tracking-[3px] text-[var(--parch)] bg-[var(--ink2)] border border-[var(--mag)]/20 rounded px-3 py-1.5 select-none">
-        ✦ {count}
       </div>
     </>
   );
