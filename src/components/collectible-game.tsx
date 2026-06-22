@@ -20,8 +20,7 @@ export default function CollectibleGame() {
   const [showHint, setShowHint] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowHint(false), 6000);
-    return () => clearTimeout(timer);
+    setShowHint(false);
   }, []);
 
   useEffect(() => {

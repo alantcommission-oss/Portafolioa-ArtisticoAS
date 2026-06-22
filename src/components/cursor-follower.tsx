@@ -19,6 +19,12 @@ export default function CursorFollower() {
       targetY = (e.clientY / window.innerHeight) * 100;
     };
 
+    const onTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      targetX = (t.clientX / window.innerWidth) * 100;
+      targetY = (t.clientY / window.innerHeight) * 100;
+    };
+
     const onKey = (e: KeyboardEvent) => {
       const k = e.key.toLowerCase();
       if (k in keys) {
@@ -43,12 +49,16 @@ export default function CursorFollower() {
     };
 
     window.addEventListener("mousemove", onMove);
+    window.addEventListener("touchstart", onTouch, { passive: true });
+    window.addEventListener("touchmove", onTouch, { passive: true });
     window.addEventListener("keydown", onKey);
     window.addEventListener("keyup", onKey);
     let raf = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("keyup", onKey);
       cancelAnimationFrame(raf);

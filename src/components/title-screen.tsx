@@ -2,7 +2,7 @@
 
 import { useLang } from "@/lib/i18n/language-context";
 
-export default function TitleScreen({ onStart }: { onStart: () => void }) {
+export default function TitleScreen({ onStart, onGameMode }: { onStart: () => void; onGameMode: () => void }) {
   const { t, lang, toggle } = useLang();
 
   return (
@@ -38,6 +38,9 @@ export default function TitleScreen({ onStart }: { onStart: () => void }) {
         </button>
         <button onClick={toggle} className="isaac-btn !text-[11px]">
           {lang === "es" ? "English" : "Español"}
+        </button>
+        <button onClick={onGameMode} className="isaac-btn !text-[10px] !py-1 opacity-50 hover:opacity-100">
+          🎮 Modo juego
         </button>
       </div>
 
