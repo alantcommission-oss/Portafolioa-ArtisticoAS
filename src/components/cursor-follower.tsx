@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import { cursorPos } from "@/lib/cursor-pos";
 
 export default function CursorFollower() {
-  const [x, setX] = useState(50);
-  const [y, setY] = useState(95);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     let targetX = 50;
@@ -33,8 +33,12 @@ export default function CursorFollower() {
       if (keys.s) targetY = Math.min(100, targetY + step);
       currentX += (targetX - currentX) * 0.04;
       currentY += (targetY - currentY) * 0.04;
-      setX(currentX);
-      setY(currentY);
+      cursorPos.x = currentX;
+      cursorPos.y = currentY;
+      if (imgRef.current) {
+        imgRef.current.style.left = `${currentX}%`;
+        imgRef.current.style.top = `${currentY}%`;
+      }
       raf = requestAnimationFrame(tick);
     };
 
@@ -53,10 +57,11 @@ export default function CursorFollower() {
 
   return (
     <img
+      ref={imgRef}
       src="/uploads/dsCCHSS.png"
       alt=""
       className="fixed pointer-events-none z-[9999] w-10 h-auto opacity-30"
-      style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%, -50%)" }}
+      style={{ left: "50%", top: "95%", transform: "translate(-50%, -50%)" }}
     />
   );
 }

@@ -9,6 +9,7 @@ import GalleryScreen from "@/components/gallery-screen";
 import ContactsScreen from "@/components/contacts-screen";
 import CursorFollower from "@/components/cursor-follower";
 import KeyboardTutorial from "@/components/keyboard-tutorial";
+import CollectibleGame from "@/components/collectible-game";
 import ThemeToggle from "@/components/theme-toggle";
 import { useLang } from "@/lib/i18n/language-context";
 
@@ -44,6 +45,7 @@ export default function Home() {
       <div className="max-md:hidden">
         <CursorFollower />
         <KeyboardTutorial />
+        <CollectibleGame />
       </div>
       <a
         href="/admin"
