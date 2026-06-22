@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useLang } from "@/lib/i18n/language-context";
+import Watermark from "@/components/watermark";
 
 interface Artwork {
   id: string;
@@ -32,6 +33,7 @@ export default function GalleryScreen({ onBack }: Props) {
   const [related, setRelated] = useState<Artwork[]>([]);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [fullSize, setFullSize] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -156,6 +158,7 @@ export default function GalleryScreen({ onBack }: Props) {
                         className={`w-full h-auto object-cover ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
                         loading="lazy"
                       />
+                      <Watermark />
                       <ObscenoOverlay id={art.id} show={obsceno && !shown} />
                     </div>
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-end p-3">
@@ -169,6 +172,15 @@ export default function GalleryScreen({ onBack }: Props) {
             </div>
 
             {/* detail modal */}
+            {fullSize && selected && (
+              <div className="fixed inset-0 z-[300] bg-black/95 flex items-center justify-center p-4" onClick={() => setFullSize(false)}>
+                <div className="relative max-w-full max-h-full" onClick={(e) => e.stopPropagation()}>
+                  <img src={selected.imageUrl} alt={selected.title} className="max-w-full max-h-[95vh] object-contain" />
+                  <Watermark />
+                  <button onClick={() => setFullSize(false)} className="absolute top-2 right-2 text-white/60 hover:text-white text-xl">✕</button>
+                </div>
+              </div>
+            )}
             {selected && (
               <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 p-4" onClick={() => setSelected(null)}>
                 <div className="bg-[var(--ink)] border border-[var(--mag)]/30 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
@@ -183,6 +195,7 @@ export default function GalleryScreen({ onBack }: Props) {
                             alt={selected.title}
                             className={`w-full object-cover max-h-[50vh] rounded-t-lg ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
                           />
+                          <Watermark />
                           <ObscenoOverlay id={selected.id} show={obsceno && !shown} />
                         </>
                       );
@@ -191,7 +204,10 @@ export default function GalleryScreen({ onBack }: Props) {
                   <div className="p-5">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-heading text-xs tracking-[3px] text-[var(--mag)]">{selected.title}</h3>
-                      <button onClick={() => setSelected(null)} className="text-[var(--text-faint)] hover:text-[var(--mag)] text-sm">✕</button>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => setFullSize(!fullSize)} className="text-[var(--text-faint)] hover:text-[var(--mag)] text-sm transition-colors" title={t("gallery_fullsize")}>⛶</button>
+                        <button onClick={() => setSelected(null)} className="text-[var(--text-faint)] hover:text-[var(--mag)] text-sm">✕</button>
+                      </div>
                     </div>
                     {selected.description && (
                       <p className="text-xs text-[var(--parch-dim)] mb-3">{selected.description}</p>
@@ -224,6 +240,7 @@ export default function GalleryScreen({ onBack }: Props) {
                                   alt={r.title}
                                   className={`w-full aspect-square object-cover ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
                                 />
+                                <Watermark />
                                 <ObscenoOverlay id={r.id} show={obsceno && !shown} />
                               </button>
                             );
