@@ -16,6 +16,7 @@ export default function MainMenu({ onSelect, onBack }: Props) {
     { id: "commissions", label: t("menu_comisiones"), hasSub: true },
     { id: "gallery", label: t("menu_galeria") },
     { id: "contacts", label: t("menu_contactos") },
+    { id: "game", label: "🎮 Modo juego" },
   ];
 
   return (

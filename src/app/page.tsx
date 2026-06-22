@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <>
       <ParticleBg />
-      {screen === "title" && <TitleScreen onStart={() => navigate("menu")} onGameMode={() => navigate("game")} />}
+      {screen === "title" && <TitleScreen onStart={() => navigate("menu")} />}
       {screen === "game" && <GameMode onBack={() => navigate("title")} />}
       {screen === "menu" && (
         <MainMenu
@@ -35,6 +35,7 @@ export default function Home() {
             else if (id === "comm-pagina") navigate("comm-pagina");
             else if (id === "gallery") navigate("gallery");
             else if (id === "contacts") navigate("contacts");
+            else if (id === "game") navigate("game");
           }}
           onBack={() => navigate("title")}
         />

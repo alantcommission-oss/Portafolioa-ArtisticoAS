@@ -3,6 +3,28 @@
 import { useEffect, useRef, useState } from "react";
 import { cursorPos } from "@/lib/cursor-pos";
 
+let audioCtx: AudioContext | null = null;
+
+function playCollectSound() {
+  if (!audioCtx) audioCtx = new AudioContext();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  const now = audioCtx.currentTime;
+
+  [523.25, 659.25, 783.99].forEach((freq, i) => {
+    const osc = audioCtx!.createOscillator();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, now + i * 0.06);
+    const g = audioCtx!.createGain();
+    g.gain.setValueAtTime(0, now + i * 0.06);
+    g.gain.linearRampToValueAtTime(0.08, now + i * 0.06 + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.6);
+    osc.connect(g);
+    g.connect(audioCtx!.destination);
+    osc.start(now + i * 0.06);
+    osc.stop(now + i * 0.06 + 0.6);
+  });
+}
+
 function randPos() {
   return {
     x: 5 + Math.random() * 85,
@@ -32,6 +54,7 @@ export default function CollectibleGame() {
       const dx = cx - (b.x + 0.5);
       const dy = cy - (b.y + 0.5);
       if (dx * dx + dy * dy < COLLECT_DIST * COLLECT_DIST) {
+        playCollectSound();
         const next = randPos();
         ballRef.current = next;
         setBall(next);

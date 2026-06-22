@@ -16,13 +16,16 @@ export default function GameMode({ onBack }: Props) {
   }, [onBack]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center pb-8 pointer-events-none">
+    <div className="fixed top-4 left-4 z-[9999] flex items-center gap-3 pointer-events-none">
       <button
         onClick={onBack}
-        className="pointer-events-auto isaac-btn !text-[10px] !px-3 !py-1.5 opacity-30 hover:opacity-100 transition-opacity"
+        className="pointer-events-auto isaac-btn !text-[11px] !px-3 !py-1.5"
       >
-        ← Volver
+        ← Menú
       </button>
+      <span className="font-heading text-[10px] tracking-[2px] text-[var(--text-faint)]">
+        ESC
+      </span>
     </div>
   );
 }
