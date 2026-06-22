@@ -8,13 +8,6 @@ const MELODY = [
   { f: 659.25, i: "piano" },
   { f: 783.99, i: "xylo" },
   { f: 880.00, i: "piano" },
-  { f: 783.99, i: "xylo" },
-  { f: 659.25, i: "piano" },
-  { f: 587.33, i: "xylo" },
-  { f: 523.25, i: "piano" },
-  { f: 659.25, i: "xylo" },
-  { f: 783.99, i: "piano" },
-  { f: 880.00, i: "xylo" },
   { f: 1046.50, i: "xylo" },
   { f: 880.00, i: "piano" },
   { f: 783.99, i: "xylo" },
@@ -24,15 +17,43 @@ const MELODY = [
   { f: 659.25, i: "xylo" },
   { f: 783.99, i: "piano" },
   { f: 880.00, i: "xylo" },
+  { f: 1046.50, i: "piano" },
+  { f: 1174.66, i: "xylo" },
+  { f: 1046.50, i: "piano" },
+  { f: 880.00, i: "xylo" },
+  { f: 783.99, i: "piano" },
+  { f: 659.25, i: "xylo" },
+  { f: 587.33, i: "piano" },
+  { f: 523.25, i: "xylo" },
+  { f: 440.00, i: "piano" },
+  { f: 523.25, i: "xylo" },
+  { f: 659.25, i: "piano" },
+  { f: 783.99, i: "xylo" },
+  { f: 880.00, i: "piano" },
+  { f: 659.25, i: "xylo" },
+  { f: 783.99, i: "piano" },
   { f: 1046.50, i: "xylo" },
   { f: 880.00, i: "piano" },
-  { f: 783.99, i: "xylo" },
-  { f: 659.25, i: "piano" },
-  { f: 587.33, i: "xylo" },
-  { f: 523.25, i: "piano" },
+  { f: 659.25, i: "xylo" },
+  { f: 587.33, i: "piano" },
+  { f: 523.25, i: "xylo" },
+  { f: 440.00, i: "piano" },
+  { f: 392.00, i: "xylo" },
+  { f: 440.00, i: "piano" },
+  { f: 523.25, i: "xylo" },
+  { f: 587.33, i: "piano" },
+  { f: 659.25, i: "xylo" },
+  { f: 783.99, i: "piano" },
+  { f: 880.00, i: "xylo" },
+  { f: 1046.50, i: "piano" },
+  { f: 880.00, i: "xylo" },
+  { f: 783.99, i: "piano" },
+  { f: 659.25, i: "xylo" },
+  { f: 587.33, i: "piano" },
+  { f: 523.25, i: "xylo" },
 ];
 
-const DRONE = [261.63, 329.63, 392.00];
+const DRONE_NOTES = [261.63, 329.63, 392.00, 440.00];
 
 let ctx: AudioContext | null = null;
 
@@ -44,13 +65,13 @@ function playPiano(now: number, freq: number) {
     osc.frequency.setValueAtTime(freq * mult, now);
     const g = ctx!.createGain();
     g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime(i === 0 ? 0.07 : 0.02, now + 0.06);
-    g.gain.linearRampToValueAtTime(0.04, now + 0.3);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+    g.gain.linearRampToValueAtTime(i === 0 ? 0.06 : 0.015, now + 0.08);
+    g.gain.linearRampToValueAtTime(0.03, now + 0.4);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
     osc.connect(g);
     g.connect(ctx!.destination);
     osc.start(now);
-    osc.stop(now + 0.9);
+    osc.stop(now + 1.1);
   });
 }
 
@@ -59,45 +80,50 @@ function playXylo(now: number, freq: number) {
   const osc = ctx!.createOscillator();
   osc.type = "triangle";
   osc.frequency.setValueAtTime(freq, now);
-  osc.frequency.linearRampToValueAtTime(freq * 1.002, now + 0.05);
+  osc.frequency.linearRampToValueAtTime(freq * 1.0015, now + 0.04);
   const g = ctx!.createGain();
   g.gain.setValueAtTime(0, now);
-  g.gain.linearRampToValueAtTime(0.06, now + 0.01);
-  g.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+  g.gain.linearRampToValueAtTime(0.05, now + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
   osc.connect(g);
   g.connect(ctx!.destination);
   osc.start(now);
-  osc.stop(now + 0.35);
+  osc.stop(now + 0.4);
 }
 
 let droneNodes: OscillatorNode[] = [];
+let droneGains: GainNode[] = [];
 
 function startDrone() {
   if (!ctx) return;
   const now = ctx.currentTime;
-  DRONE.forEach((freq, i) => {
+  droneGains = [];
+  DRONE_NOTES.forEach((freq) => {
     const osc = ctx!.createOscillator();
     osc.type = "sine";
     osc.frequency.setValueAtTime(freq, now);
     const g = ctx!.createGain();
     g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime(0.015, now + 2);
+    g.gain.linearRampToValueAtTime(0.006, now + 5);
     osc.connect(g);
     g.connect(ctx!.destination);
     osc.start(now);
     droneNodes.push(osc);
+    droneGains.push(g);
   });
 }
 
 function stopDrone() {
   if (!ctx) return;
   const now = ctx.currentTime;
-  droneNodes.forEach((osc) => {
-    try {
-      osc.frequency.linearRampToValueAtTime(0.01, now + 0.05);
-    } catch {}
+  droneGains.forEach((g) => {
+    try { g.gain.linearRampToValueAtTime(0, now + 1); } catch {}
   });
-  droneNodes = [];
+  setTimeout(() => {
+    droneNodes.forEach((osc) => { try { osc.stop(); } catch {} });
+    droneNodes = [];
+    droneGains = [];
+  }, 1100);
 }
 
 export default function MusicPlayer() {
@@ -120,7 +146,7 @@ export default function MusicPlayer() {
     if (note.i === "piano") playPiano(now, note.f);
     else playXylo(now, note.f);
 
-    timerRef.current = setTimeout(playNote, 550 + Math.random() * 150);
+    timerRef.current = setTimeout(playNote, 520 + Math.random() * 160);
   }, []);
 
   const toggle = useCallback(() => {
