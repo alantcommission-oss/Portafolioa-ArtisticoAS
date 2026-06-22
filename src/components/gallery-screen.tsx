@@ -49,14 +49,14 @@ export default function GalleryScreen({ onBack }: Props) {
 
   return (
     <div className="page visible flex flex-col items-center z-10 px-4 overflow-y-auto py-10">
+      <button onClick={onBack} className="fixed left-4 top-1/2 -translate-y-1/2 z-[100] isaac-btn !text-[16px] !px-3 !py-4">
+        ← {t("back")}
+      </button>
       <div className="w-full max-w-4xl">
         <div className="text-center mb-8">
-          <h2 className="font-heading text-xs tracking-[5px] text-[var(--mag)] uppercase mb-6">
+          <h2 className="font-heading text-sm tracking-[5px] text-[var(--mag)] uppercase mb-6">
             {t("gallery_title")}
           </h2>
-          <button onClick={onBack} className="isaac-btn !text-[14px] !px-6 !py-3 mx-auto block">
-            ← {t("back")}
-          </button>
         </div>
 
         {artworks.length === 0 ? (
@@ -74,9 +74,9 @@ export default function GalleryScreen({ onBack }: Props) {
                   <div
                     key={art.id}
                     onClick={() => isObscene && !isRevealed ? setRevealed(prev => new Set(prev).add(art.id)) : openDetail(art)}
-                    className="break-inside-avoid rounded overflow-hidden border border-[#2a1a20] hover:border-[var(--mag)] hover:scale-[1.4] transition-all duration-300 cursor-pointer group relative"
+                    className="break-inside-avoid rounded border border-[#2a1a20] hover:border-[var(--mag)] hover:scale-[1.4] hover:z-10 transition-all duration-300 cursor-pointer group relative"
                   >
-                    <div className="relative">
+                    <div className="relative rounded overflow-hidden">
                       <img
                         src={art.imageUrl}
                         alt={art.title}

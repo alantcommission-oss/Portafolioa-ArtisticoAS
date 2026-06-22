@@ -21,12 +21,12 @@ export default function MainMenu({ onSelect, onBack }: Props) {
   return (
     <div className="page visible flex flex-col items-center justify-center z-10">
       <div className="w-full max-w-sm px-6">
-        <button onClick={onBack} className="isaac-btn !text-[11px] !p-1 mb-6">
+        <button onClick={onBack} className="isaac-btn !text-[14px] !p-2 mb-6">
           ← {t("back")}
         </button>
 
         <div className="text-center mb-10">
-          <h2 className="font-heading text-sm tracking-[6px] text-[var(--mag)] uppercase">
+          <h2 className="font-heading text-xl tracking-[6px] text-[var(--mag)] uppercase">
             Alant<span className="text-[var(--parch)]">Art</span>
           </h2>
           <div className="mag-divider mt-2" />

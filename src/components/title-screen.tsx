@@ -13,20 +13,20 @@ export default function TitleScreen({ onStart }: { onStart: () => void }) {
         <img
           src="/uploads/dsCCHSS.png"
           alt="AlantArt"
-          className="w-[110px] h-auto crow-bob title-crow"
+          className="w-[160px] h-auto crow-bob title-crow"
         />
       </div>
 
       {/* title */}
       <div className="text-center space-y-3">
-        <p className="font-heading text-[10px] tracking-[6px] text-[var(--mag)] uppercase">
+        <p className="font-heading text-[13px] tracking-[6px] text-[var(--mag)] uppercase">
           Portafolio de Dibujos
         </p>
-        <h1 className="font-heading text-[clamp(28px,5vw,42px)] font-black tracking-[4px] text-[var(--parch)] leading-none">
+        <h1 className="font-heading text-[clamp(42px,7vw,60px)] font-black tracking-[4px] text-[var(--parch)] leading-none">
           Alant<span className="text-[var(--mag)]">Art</span>
         </h1>
         <div className="mag-divider !w-[140px]" />
-        <p className="text-[13px] tracking-[3px] text-[var(--text-faint)] italic">
+        <p className="text-[16px] tracking-[3px] text-[var(--text-faint)] italic">
           {t("subtitle")}
         </p>
       </div>
@@ -41,7 +41,7 @@ export default function TitleScreen({ onStart }: { onStart: () => void }) {
         </button>
       </div>
 
-      <p className="absolute bottom-8 text-[10px] tracking-[4px] text-[var(--text-faint)] italic animate-pulse">
+      <p className="absolute bottom-8 text-[13px] tracking-[4px] text-[var(--text-faint)] italic animate-pulse">
         ◆ &nbsp; {t("start")} &nbsp; ◆
       </p>
     </div>
