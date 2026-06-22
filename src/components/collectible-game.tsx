@@ -25,6 +25,25 @@ function playCollectSound() {
   });
 }
 
+function playHitSound() {
+  if (!audioCtx) audioCtx = new AudioContext();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  const now = audioCtx.currentTime;
+
+  [220, 155].forEach((freq, i) => {
+    const osc = audioCtx!.createOscillator();
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(freq, now);
+    const g = audioCtx!.createGain();
+    g.gain.setValueAtTime(0.06, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.connect(g);
+    g.connect(audioCtx!.destination);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  });
+}
+
 function randPos() {
   return {
     x: 5 + Math.random() * 85,
@@ -34,17 +53,30 @@ function randPos() {
 
 const COLLECT_DIST = 7;
 
-export default function CollectibleGame() {
+interface Props {
+  gameMode?: boolean;
+}
+
+export default function CollectibleGame({ gameMode }: Props) {
   const [count, setCount] = useState(0);
   const [ball, setBall] = useState(randPos);
   const ballRef = useRef(ball);
   const [pop, setPop] = useState(false);
+  const [tri, setTri] = useState(randPos);
+  const triRef = useRef(tri);
+  const triNextSpawn = useRef(5);
+  const [triHit, setTriHit] = useState(false);
+  const countRef = useRef(0);
+  const gameModeRef = useRef(gameMode);
+  gameModeRef.current = gameMode;
 
   useEffect(() => {
     let raf: number;
     const tick = () => {
       const cx = cursorPos.x;
       const cy = cursorPos.y;
+      const gm = gameModeRef.current;
+
       const b = ballRef.current;
       const dx = cx - (b.x + 0.5);
       const dy = cy - (b.y + 0.5);
@@ -53,10 +85,36 @@ export default function CollectibleGame() {
         const next = randPos();
         ballRef.current = next;
         setBall(next);
-        setCount((c) => c + 1);
+        setCount((c) => {
+          const n = c + 1;
+          countRef.current = n;
+          if (gm && n >= triNextSpawn.current) {
+            triNextSpawn.current = n + 5;
+            const tp = randPos();
+            triRef.current = tp;
+            setTri(tp);
+          }
+          return n;
+        });
         setPop(true);
         setTimeout(() => setPop(false), 200);
       }
+
+      if (gm && countRef.current >= 5) {
+        const t = triRef.current;
+        const tdx = cx - (t.x + 0.5);
+        const tdy = cy - (t.y + 0.5);
+        if (tdx * tdx + tdy * tdy < COLLECT_DIST * COLLECT_DIST) {
+          playHitSound();
+          const next = randPos();
+          triRef.current = next;
+          setTri(next);
+          setTriHit(true);
+          setTimeout(() => setTriHit(false), 200);
+          setCount((c) => Math.max(0, c - 1));
+        }
+      }
+
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -79,6 +137,26 @@ export default function CollectibleGame() {
           }}
         />
       </div>
+
+      {gameMode && count >= 5 && (
+        <div
+          className="fixed pointer-events-none z-[9998] flex items-center justify-center"
+          style={{ left: `${tri.x}%`, top: `${tri.y}%` }}
+        >
+          <div
+            className={`transition-transform duration-150 ${triHit ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
+            style={{
+              width: 0,
+              height: 0,
+              borderLeft: "7px solid transparent",
+              borderRight: "7px solid transparent",
+              borderBottom: "14px solid #f44",
+              filter: "drop-shadow(0 0 6px rgba(255,50,50,0.7))",
+            }}
+          />
+        </div>
+      )}
+
       <div className="fixed top-4 left-4 z-[9999] font-heading text-xs tracking-[3px] text-[var(--parch)] bg-[var(--ink2)] border border-[var(--mag)]/20 rounded px-3 py-1.5 select-none">
         ✦ {count}
       </div>

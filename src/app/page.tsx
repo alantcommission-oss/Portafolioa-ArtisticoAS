@@ -56,7 +56,7 @@ export default function Home() {
       <ThemeToggle />
       <CursorFollower />
       <KeyboardTutorial />
-      <CollectibleGame />
+      <CollectibleGame gameMode={showGame} />
       <a
         href="/admin"
         className="fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ink2)] border border-[var(--mag)]/30 text-[var(--mag)] hover:bg-[var(--mag)] hover:text-[var(--ink)] transition-all opacity-50 hover:opacity-100 text-lg"
