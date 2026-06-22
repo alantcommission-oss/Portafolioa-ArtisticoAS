@@ -4,6 +4,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html {
+  cursor: url('/uploads/NewCanvas10AFWBFB.png'), auto;
+}
+a, button, input, textarea, select, summary {
+  cursor: url('/uploads/NewCanvas10AFWBFB.png'), pointer;
+}
+
 :root {
   --ink: #08050a;
   --ink2: #0f0a14;
