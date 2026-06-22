@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLang } from "@/lib/i18n/language-context";
 
 interface Artwork {
@@ -45,6 +45,14 @@ export default function GalleryScreen({ onBack }: Props) {
   const allTags = [...new Set(artworks.flatMap((a) => a.tags))].sort();
   const filtered = activeTag ? artworks.filter((a) => a.tags.includes(activeTag)) : artworks;
 
+  useEffect(() => {
+    if (selected) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [selected]);
+
   function openDetail(art: Artwork) {
     setSelected(art);
     const others = artworks.filter((a) => a.id !== art.id);
@@ -74,8 +82,8 @@ export default function GalleryScreen({ onBack }: Props) {
   }
 
   return (
-    <div className={`page visible flex flex-col items-center z-10 px-4 py-10 ${selected ? "overflow-hidden" : "overflow-y-auto"}`}>
-      <button onClick={onBack} className="isaac-btn !text-[14px] !px-4 !py-2 mb-6 self-start">
+    <div className="page visible flex flex-col items-center z-10 px-4 py-10 overflow-y-auto">
+      <button onClick={onBack} className="isaac-btn !text-[14px] !px-4 !py-2 mb-6">
         ← {t("back")}
       </button>
       <div className="w-full max-w-5xl">
