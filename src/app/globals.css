@@ -81,7 +81,7 @@
 /* ── isaac-style menu text ── */
 .isaac-btn {
   font-family: var(--font-heading);
-  font-size: 13px;
+  font-size: 15px;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--parch-mid);
@@ -90,7 +90,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  padding: 10px 24px;
+  padding: 12px 28px;
 }
 .isaac-btn::before {
   content: "";
@@ -106,7 +106,7 @@
 
 .isaac-btn.primary {
   color: var(--mag);
-  font-size: 15px;
+  font-size: 18px;
 }
 .isaac-btn.primary::before { background: var(--mag); height: 1px; }
 .isaac-btn.primary:hover { color: #cc00a0; text-shadow: 0 0 16px var(--mag-glow); }

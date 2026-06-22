@@ -7,10 +7,12 @@ import MainMenu from "@/components/main-menu";
 import CommissionsScreen from "@/components/commissions-screen";
 import GalleryScreen from "@/components/gallery-screen";
 import ContactsScreen from "@/components/contacts-screen";
+import { useLang } from "@/lib/i18n/language-context";
 
-type Screen = "title" | "menu" | "commissions" | "gallery" | "contacts";
+type Screen = "title" | "menu" | "comm-dibujo" | "comm-pagina" | "gallery" | "contacts";
 
 export default function Home() {
+  const { t } = useLang();
   const [screen, setScreen] = useState<Screen>("title");
 
   const navigate = (s: Screen) => setScreen(s);
@@ -22,19 +24,25 @@ export default function Home() {
       {screen === "menu" && (
         <MainMenu
           onSelect={(id) => {
-            if (id === "commissions" || id === "comm-dibujo" || id === "comm-pagina") {
-              navigate("commissions");
-            } else if (id === "gallery") {
-              navigate("gallery");
-            } else if (id === "contacts") {
-              navigate("contacts");
-            }
+            if (id === "comm-dibujo") navigate("comm-dibujo");
+            else if (id === "comm-pagina") navigate("comm-pagina");
+            else if (id === "gallery") navigate("gallery");
+            else if (id === "contacts") navigate("contacts");
           }}
+          onBack={() => navigate("title")}
         />
       )}
-      {screen === "commissions" && <CommissionsScreen onBack={() => navigate("menu")} />}
+      {screen === "comm-dibujo" && <CommissionsScreen type="dibujo" onBack={() => navigate("menu")} />}
+      {screen === "comm-pagina" && <CommissionsScreen type="pagina" onBack={() => navigate("menu")} />}
       {screen === "gallery" && <GalleryScreen onBack={() => navigate("menu")} />}
       {screen === "contacts" && <ContactsScreen onBack={() => navigate("menu")} />}
+
+      <a
+        href="/admin"
+        className="fixed bottom-4 left-4 z-50 isaac-btn !text-[10px] !p-2 opacity-40 hover:opacity-80 transition-opacity"
+      >
+        {t("admin_panel")}
+      </a>
     </>
   );
 }

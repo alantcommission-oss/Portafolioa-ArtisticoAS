@@ -7,18 +7,9 @@ interface Props {
   onBack: () => void;
 }
 
-type Social = { key: string; label: string; placeholder: string };
-
-const socials: Social[] = [
-  { key: "instagram", label: "contact_instagram", placeholder: "instagram.com/tuusuario" },
-  { key: "twitter", label: "contact_twitter", placeholder: "twitter.com/tuusuario" },
-  { key: "telegram", label: "contact_telegram", placeholder: "t.me/tuusuario" },
-];
-
 export default function ContactsScreen({ onBack }: Props) {
   const { t } = useLang();
   const [sent, setSent] = useState(false);
-  const [socialLinks, setSocialLinks] = useState<Record<string, string>>({});
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,7 +20,7 @@ export default function ContactsScreen({ onBack }: Props) {
   return (
     <div className="page visible flex flex-col items-center justify-center z-10 px-4 overflow-y-auto py-10">
       <div className="w-full max-w-md">
-        <button onClick={onBack} className="isaac-btn !text-[10px] !p-2 mb-4">
+        <button onClick={onBack} className="isaac-btn !text-[11px] !p-2 mb-4">
           ← {t("back")}
         </button>
 
@@ -56,21 +47,39 @@ export default function ContactsScreen({ onBack }: Props) {
           <h3 className="font-heading text-[10px] tracking-[4px] text-[var(--text-faint)] uppercase mb-4">
             {t("contact_social")}
           </h3>
-          <div className="space-y-4">
-            {socials.map((s) => (
-              <div key={s.key}>
-                <label className="block text-[10px] tracking-[3px] text-[var(--text-faint)] uppercase mb-1">
-                  {t(s.label)}
-                </label>
-                <input
-                  type="text"
-                  className="social-input"
-                  placeholder={s.placeholder}
-                  value={socialLinks[s.key] || ""}
-                  onChange={(e) => setSocialLinks((prev) => ({ ...prev, [s.key]: e.target.value }))}
-                />
+          <div className="flex flex-col gap-3">
+            {/* Instagram */}
+            <a href="https://www.instagram.com/alan_t.mouse/?hl=es-la" target="_blank" rel="noopener noreferrer"
+              className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group">
+              <span className="text-lg">📸</span>
+              <div className="flex-1 text-left">
+                <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Instagram</span>
+                <p className="text-[10px] text-[var(--text-faint)]">@alan_t.mouse</p>
               </div>
-            ))}
+              <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+            </a>
+
+            {/* Telegram */}
+            <a href="https://t.me/+hWKCNY6LF0JlYjYx" target="_blank" rel="noopener noreferrer"
+              className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group">
+              <span className="text-lg">✈️</span>
+              <div className="flex-1 text-left">
+                <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Telegram</span>
+                <p className="text-[10px] text-[var(--text-faint)]">@AlanTMouse</p>
+              </div>
+              <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+            </a>
+
+            {/* Twitter/X */}
+            <a href="https://x.com/alan_candy?t=F7mPuWMxgrRI5HbUswXqAQ&s=09" target="_blank" rel="noopener noreferrer"
+              className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group">
+              <span className="text-lg">🐦</span>
+              <div className="flex-1 text-left">
+                <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">X / Twitter</span>
+                <p className="text-[10px] text-[var(--text-faint)]">@alan_candy</p>
+              </div>
+              <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+            </a>
           </div>
         </div>
       </div>

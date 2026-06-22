@@ -5,9 +5,10 @@ import { useLang } from "@/lib/i18n/language-context";
 
 interface Props {
   onSelect: (section: string) => void;
+  onBack: () => void;
 }
 
-export default function MainMenu({ onSelect }: Props) {
+export default function MainMenu({ onSelect, onBack }: Props) {
   const { t } = useLang();
   const [comOpen, setComOpen] = useState(false);
 
@@ -20,8 +21,12 @@ export default function MainMenu({ onSelect }: Props) {
   return (
     <div className="page visible flex flex-col items-center justify-center z-10">
       <div className="w-full max-w-sm px-6">
+        <button onClick={onBack} className="isaac-btn !text-[11px] !p-1 mb-6">
+          ← {t("back")}
+        </button>
+
         <div className="text-center mb-10">
-          <h2 className="font-heading text-xs tracking-[6px] text-[var(--mag)] uppercase">
+          <h2 className="font-heading text-sm tracking-[6px] text-[var(--mag)] uppercase">
             Alant<span className="text-[var(--parch)]">Art</span>
           </h2>
           <div className="mag-divider mt-2" />
@@ -57,10 +62,6 @@ export default function MainMenu({ onSelect }: Props) {
             </div>
           ))}
         </div>
-
-        <p className="text-center mt-12 text-[10px] tracking-[4px] text-[var(--text-faint)] italic">
-          ◆ &nbsp; {t("start")} &nbsp; ◆
-        </p>
       </div>
     </div>
   );
