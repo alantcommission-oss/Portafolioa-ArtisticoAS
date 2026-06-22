@@ -135,6 +135,42 @@ a, button, input, textarea, select, summary {
 .isaac-btn.primary:hover { color: #cc00a0; text-shadow: 0 0 16px var(--mag-glow); }
 .isaac-btn.primary:hover::before { width: 70%; }
 
+/* ── isaac-style tag filter ── */
+.isaac-tag {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  padding: 6px 8px 10px;
+  text-align: left;
+}
+.isaac-tag::after {
+  content: "";
+  position: absolute; bottom: 2px; left: 8px;
+  width: 0; height: 1px;
+  background: var(--mag);
+  transition: all 0.25s ease;
+}
+.isaac-tag:hover { color: var(--parch); }
+.isaac-tag:hover::after { width: calc(100% - 16px); }
+.isaac-tag.active {
+  color: var(--mag);
+}
+.isaac-tag.active::after {
+  width: calc(100% - 16px);
+}
+.isaac-tag.active:hover {
+  color: #cc00a0;
+  text-shadow: 0 0 12px var(--mag-glow);
+}
+.isaac-tag.active:hover::after { background: #cc00a0; }
+
 /* ── floating dust ── */
 @keyframes floatDust {
   0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }

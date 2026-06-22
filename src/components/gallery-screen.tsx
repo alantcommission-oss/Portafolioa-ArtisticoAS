@@ -97,7 +97,7 @@ export default function GalleryScreen({ onBack }: Props) {
     <div className="page visible z-10 overflow-y-auto">
       <div className="min-h-screen flex flex-col">
         {/* top bar */}
-        <div className="flex items-center gap-4 px-4 pt-4 pb-2 shrink-0">
+        <div className="flex items-center gap-4 px-6 pt-6 pb-2 shrink-0">
           <button onClick={onBack} className="isaac-btn !text-[14px] !px-4 !py-2">
             ← {t("back")}
           </button>
@@ -111,18 +111,14 @@ export default function GalleryScreen({ onBack }: Props) {
             {t("gallery_empty")}
           </p>
         ) : (
-          <div className="flex-1 flex flex-col md:flex-row px-4 pb-10 gap-4 max-w-4xl mx-auto w-full">
+          <div className="flex-1 flex flex-col md:flex-row px-6 pb-10 gap-6 max-w-[min(85vw,56rem)] mx-auto w-full">
             {/* tag filter — left column on desktop, horizontal scroll on mobile */}
             {allTags.length > 0 && (
-              <aside className="md:w-28 md:shrink-0 md:sticky md:top-4 md:self-start">
-                <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+              <aside className="md:w-32 md:shrink-0 md:sticky md:top-6 md:self-start">
+                <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
                   <button
                     onClick={() => setActiveTag(null)}
-                    className={`shrink-0 px-3 py-1.5 text-xs tracking-wider uppercase font-heading rounded border transition-all ${
-                      !activeTag
-                        ? "bg-[var(--mag)] text-white border-[var(--mag)]"
-                        : "bg-transparent text-[var(--text-faint)] border-[var(--mag)]/20 hover:border-[var(--mag)]/50 hover:text-[var(--mag)]"
-                    }`}
+                    className={`isaac-tag ${!activeTag ? "active" : ""}`}
                   >
                     {t("gallery_all")}
                   </button>
@@ -130,11 +126,7 @@ export default function GalleryScreen({ onBack }: Props) {
                     <button
                       key={tag}
                       onClick={() => setActiveTag(tag)}
-                      className={`shrink-0 px-3 py-1.5 text-xs tracking-wider uppercase font-heading rounded border transition-all ${
-                        activeTag === tag
-                          ? "bg-[var(--mag)] text-white border-[var(--mag)]"
-                          : "bg-transparent text-[var(--text-faint)] border-[var(--mag)]/20 hover:border-[var(--mag)]/50 hover:text-[var(--mag)]"
-                      }`}
+                      className={`isaac-tag ${activeTag === tag ? "active" : ""}`}
                     >
                       {tag}
                     </button>
