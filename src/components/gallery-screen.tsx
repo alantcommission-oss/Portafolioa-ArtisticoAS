@@ -48,13 +48,15 @@ export default function GalleryScreen({ onBack }: Props) {
   function openDetail(art: Artwork) {
     setSelected(art);
     const others = artworks.filter((a) => a.id !== art.id);
-    setRelated(shuffle(others).slice(0, 4));
+    setRelated(shuffle(others).slice(0, 8));
   }
 
   return (
     <div className="page visible flex flex-col items-center z-10 px-4 overflow-y-auto py-10">
-      <button onClick={onBack} className="fixed top-4 left-4 z-[100] isaac-btn !text-[18px] !px-5 !py-3 bg-[var(--ink2)]/80 border border-[var(--mag)]/40 shadow-[0_0_20px_rgba(179,0,137,0.2)] hover:border-[var(--mag)]">
-        ← {t("back")}
+      <button onClick={onBack}
+        className="fixed top-4 left-4 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ink2)] border border-[var(--mag)]/30 text-[var(--mag)] hover:bg-[var(--mag)] hover:text-[var(--ink)] transition-all opacity-50 hover:opacity-100 text-lg"
+        title={t("back")}>
+        ←
       </button>
       <div className="w-full max-w-5xl">
         <div className="text-center mb-8">

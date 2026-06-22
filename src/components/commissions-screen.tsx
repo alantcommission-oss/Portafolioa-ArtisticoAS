@@ -34,9 +34,6 @@ function BodyIcon({ type }: { type: string }) {
   if (type === "half") {
     return <svg width={s} height={s} viewBox="0 0 32 32"><circle cx="16" cy="8" r="6" fill="none" stroke="#b30089" strokeWidth="1.2"/><rect x="8" y="14" width="16" height="14" rx="2" fill="none" stroke="#b30089" strokeWidth="1"/></svg>;
   }
-  if (type === "multi") {
-    return <svg width={s} height={s} viewBox="0 0 32 32"><circle cx="10" cy="7" r="4" fill="none" stroke="#b30089" strokeWidth="1.2"/><circle cx="22" cy="7" r="4" fill="none" stroke="#b30089" strokeWidth="1.2"/><rect x="5" y="12" width="10" height="10" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/><rect x="17" y="12" width="10" height="10" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/></svg>;
-  }
   return <svg width={s} height={s} viewBox="0 0 32 32"><circle cx="16" cy="6" r="5" fill="none" stroke="#b30089" strokeWidth="1.2"/><rect x="10" y="11" width="12" height="10" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/><rect x="10" y="21" width="5" height="9" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/><rect x="17" y="21" width="5" height="9" rx="1.5" fill="none" stroke="#b30089" strokeWidth="1"/></svg>;
 }
 
@@ -52,7 +49,9 @@ export default function CommissionsScreen({ onBack, type }: Props) {
   const [bodyType, setBodyType] = useState("");
   const [shading, setShading] = useState(false);
   const [hasBg, setHasBg] = useState(false);
-  const [colored, setColored] = useState(false);
+  const [extraChar, setExtraChar] = useState(false);
+  const [sticker, setSticker] = useState(false);
+  const [nsfw, setNsfw] = useState(false);
 
   /* page state */
   const [pageCat, setPageCat] = useState("");
@@ -80,7 +79,7 @@ export default function CommissionsScreen({ onBack, type }: Props) {
     e.preventDefault();
     const orderType = type === "dibujo" ? "Dibujo" : "Página web";
     const details = type === "dibujo"
-      ? `Categoría: ${category} | Tipo: ${bodyType} | Sombreado: ${shading} | Fondo: ${hasBg} | Color: ${colored}`
+      ? `Categoría: ${category} | Tipo: ${bodyType} | Shade&Shine: ${shading} | Personaje extra: ${extraChar} | Sticker: ${sticker} | NSFW: ${nsfw} | Fondo: ${hasBg}`
       : `Categoría: ${pageCat} | Tiempo: ${timeLimit} | Presupuesto: ${budget} | Propósito: ${purpose}`;
     const payload = {
       name: "Pedido vía web",
@@ -110,10 +109,9 @@ export default function CommissionsScreen({ onBack, type }: Props) {
       { id: "other", icon: <OtherIcon />, label: t("cat_other") },
     ];
     const bodyTypes = [
-      { id: "head", label: t("comm_head"), sub: t("comm_head_desc"), price: t("comm_headtip") },
-      { id: "half", label: t("comm_half"), sub: t("comm_half_desc"), price: t("comm_halftip") },
-      { id: "full", label: t("comm_full"), sub: t("comm_full_desc"), price: t("comm_fulltip") },
-      { id: "multi", label: t("comm_multi"), sub: t("comm_multi_desc"), price: t("comm_multitip") },
+      { id: "head", label: t("comm_head"), sub: t("comm_head_desc"), price: "$10" },
+      { id: "half", label: t("comm_half"), sub: t("comm_half_desc"), price: "$15" },
+      { id: "full", label: t("comm_full"), sub: t("comm_full_desc"), price: "$20" },
     ];
 
     return (
@@ -163,7 +161,6 @@ export default function CommissionsScreen({ onBack, type }: Props) {
             <div>
               <p className="font-heading text-xs tracking-[3px] text-[var(--parch)] text-center mb-5">{t("add_ons")}</p>
               <div className="space-y-3 mb-6">
-                {/* shading */}
                 <label className={`comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] cursor-pointer ${shading ? "!border-[var(--mag)]" : "!border-[#2a1a20]"}`}>
                   <input type="checkbox" checked={shading} onChange={() => setShading(!shading)} className="accent-[var(--mag)]" />
                   <div className="flex-1">
@@ -172,6 +169,33 @@ export default function CommissionsScreen({ onBack, type }: Props) {
                   </div>
                   <span className="text-xs text-[var(--mag)]">+$5</span>
                 </label>
+                {/* extra character */}
+                <label className={`comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] cursor-pointer ${extraChar ? "!border-[var(--mag)]" : "!border-[#2a1a20]"}`}>
+                  <input type="checkbox" checked={extraChar} onChange={() => setExtraChar(!extraChar)} className="accent-[var(--mag)]" />
+                  <div className="flex-1">
+                    <span className="font-heading text-xs tracking-[2px] text-[var(--parch)]">{t("extra_char")}</span>
+                    <p className="text-[10px] text-[var(--text-faint)] italic mt-0.5">{t("extra_char_desc")}</p>
+                  </div>
+                  <span className="text-xs text-[var(--mag)]">+50%</span>
+                </label>
+                {/* sticker */}
+                <label className={`comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] cursor-pointer ${sticker ? "!border-[var(--mag)]" : "!border-[#2a1a20]"}`}>
+                  <input type="checkbox" checked={sticker} onChange={() => setSticker(!sticker)} className="accent-[var(--mag)]" />
+                  <div className="flex-1">
+                    <span className="font-heading text-xs tracking-[2px] text-[var(--parch)]">{t("sticker")}</span>
+                    <p className="text-[10px] text-[var(--text-faint)] italic mt-0.5">{t("sticker_desc")}</p>
+                  </div>
+                  <span className="text-xs text-[var(--mag)]">$3</span>
+                </label>
+                {/* nsfw */}
+                <label className={`comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] cursor-pointer ${nsfw ? "!border-[var(--mag)]" : "!border-[#2a1a20]"}`}>
+                  <input type="checkbox" checked={nsfw} onChange={() => setNsfw(!nsfw)} className="accent-[var(--mag)]" />
+                  <div className="flex-1">
+                    <span className="font-heading text-xs tracking-[2px] text-[var(--parch)]">NSFW</span>
+                    <p className="text-[10px] text-[var(--text-faint)] italic mt-0.5">{t("nsfw_desc")}</p>
+                  </div>
+                  <span className="text-xs text-[var(--mag)]">+$9</span>
+                </label>
                 {/* bg */}
                 <label className={`comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] cursor-pointer ${hasBg ? "!border-[var(--mag)]" : "!border-[#2a1a20]"}`}>
                   <input type="checkbox" checked={hasBg} onChange={() => setHasBg(!hasBg)} className="accent-[var(--mag)]" />
@@ -179,16 +203,7 @@ export default function CommissionsScreen({ onBack, type }: Props) {
                     <span className="font-heading text-xs tracking-[2px] text-[var(--parch)]">{t("background")}</span>
                     <p className="text-[10px] text-[var(--text-faint)] italic mt-0.5">{t("background_desc")}</p>
                   </div>
-                  <span className="text-xs text-[var(--mag)]">+$10</span>
-                </label>
-                {/* color */}
-                <label className={`comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] cursor-pointer ${colored ? "!border-[var(--mag)]" : "!border-[#2a1a20]"}`}>
-                  <input type="checkbox" checked={colored} onChange={() => setColored(!colored)} className="accent-[var(--mag)]" />
-                  <div className="flex-1">
-                    <span className="font-heading text-xs tracking-[2px] text-[var(--parch)]">{t("color")}</span>
-                    <p className="text-[10px] text-[var(--text-faint)] italic mt-0.5">{t("color_desc")}</p>
-                  </div>
-                  <span className="text-xs text-[var(--mag)]">+$8</span>
+                  <span className="text-xs text-[var(--mag)]">+$7</span>
                 </label>
               </div>
               <div className="flex gap-3">

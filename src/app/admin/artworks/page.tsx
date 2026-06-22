@@ -17,7 +17,7 @@ export default function AdminArtworksPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Artwork | null>(null);
-  const tagOptions = ["sombra", "color", "cuerpo completo", "sticker", "obsceno"];
+  const tagOptions = ["sombra", "color", "cuerpo completo", "sticker", "obsceno", "escenario"];
   const [form, setForm] = useState({
     title: "",
     description: "",
