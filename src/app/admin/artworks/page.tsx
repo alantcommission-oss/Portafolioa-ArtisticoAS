@@ -143,6 +143,11 @@ export default function AdminArtworksPage() {
 
   return (
     <div className="p-6">
+      <a href="/"
+        className="isaac-btn !text-[14px] !px-4 !py-2 mb-6 inline-block"
+      >
+        ← Volver
+      </a>
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-heading text-2xl text-accent uppercase tracking-wider">
           Gallery Management
