@@ -62,16 +62,16 @@ function playPiano(now: number, freq: number) {
   [1, 2.01, 3.02].forEach((mult, i) => {
     const osc = ctx!.createOscillator();
     osc.type = "sine";
-    osc.frequency.setValueAtTime(freq * mult, now);
+    osc.frequency.setValueAtTime(freq * mult * 0.5, now);
     const g = ctx!.createGain();
     g.gain.setValueAtTime(0, now);
-    g.gain.linearRampToValueAtTime(i === 0 ? 0.06 : 0.015, now + 0.08);
-    g.gain.linearRampToValueAtTime(0.03, now + 0.4);
-    g.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+    g.gain.linearRampToValueAtTime(i === 0 ? 0.08 : 0.02, now + 0.1);
+    g.gain.linearRampToValueAtTime(0.05, now + 0.5);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 2.8);
     osc.connect(g);
     g.connect(ctx!.destination);
     osc.start(now);
-    osc.stop(now + 1.1);
+    osc.stop(now + 2.8);
   });
 }
 
