@@ -108,7 +108,7 @@ export default function CommissionsScreen({ onBack, type }: Props) {
   function redirectTo(platform: "telegram" | "instagram" | "gmail") {
     const text = encodeURIComponent(`${orderMsg}\n\n¡Hola Alan! Quiero coordinar esta comisión.`);
     const urls = {
-      telegram: `https://t.me/AlanTMouse?text=${text}`,
+      telegram: `https://t.me/AlanTST?text=${text}`,
       instagram: "https://www.instagram.com/alan_t.mouse/",
       gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=alantcommission@gmail.com&body=${text}`,
     };
@@ -261,11 +261,35 @@ export default function CommissionsScreen({ onBack, type }: Props) {
               {sent ? (
                 <div className="text-center">
                   <p className="font-heading text-xs tracking-[3px] text-[var(--mag)] mb-4">{t("order_sent")}</p>
-                  <p className="font-heading text-[10px] tracking-[4px] text-[var(--text-faint)] uppercase mb-3">Contactarme para coordinar</p>
-                  <div className="flex flex-col gap-2">
-                    <button type="button" onClick={() => redirectTo("telegram")} className="isaac-btn primary !text-sm w-full">Telegram</button>
-                    <button type="button" onClick={() => redirectTo("instagram")} className="isaac-btn primary !text-sm w-full">Instagram</button>
-                    <button type="button" onClick={() => redirectTo("gmail")} className="isaac-btn primary !text-sm w-full">Gmail</button>
+                  <p className="font-heading text-[10px] tracking-[4px] text-[var(--text-faint)] uppercase mb-3">Enviar por</p>
+                  <div className="flex flex-col gap-3">
+                    <button type="button" onClick={() => redirectTo("telegram")}
+                      className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group text-left">
+                      <span className="text-lg">✈️</span>
+                      <div className="flex-1 text-left">
+                        <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Telegram</span>
+                        <p className="text-[10px] text-[var(--text-faint)]">@AlanTST</p>
+                      </div>
+                      <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </button>
+                    <button type="button" onClick={() => redirectTo("instagram")}
+                      className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group text-left">
+                      <span className="text-lg">📸</span>
+                      <div className="flex-1 text-left">
+                        <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Instagram</span>
+                        <p className="text-[10px] text-[var(--text-faint)]">@alan_t.mouse</p>
+                      </div>
+                      <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </button>
+                    <button type="button" onClick={() => redirectTo("gmail")}
+                      className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group text-left">
+                      <span className="text-lg">✉️</span>
+                      <div className="flex-1 text-left">
+                        <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Gmail</span>
+                        <p className="text-[10px] text-[var(--text-faint)]">alantcommission@gmail.com</p>
+                      </div>
+                      <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -362,11 +386,35 @@ export default function CommissionsScreen({ onBack, type }: Props) {
             {sent ? (
               <div className="text-center">
                 <p className="font-heading text-xs tracking-[3px] text-[var(--mag)] mb-4">{t("order_sent")}</p>
-                <p className="font-heading text-[10px] tracking-[4px] text-[var(--text-faint)] uppercase mb-3">Contactarme para coordinar</p>
-                <div className="flex flex-col gap-2">
-                  <button type="button" onClick={() => redirectTo("telegram")} className="isaac-btn primary !text-sm w-full">Telegram</button>
-                  <button type="button" onClick={() => redirectTo("instagram")} className="isaac-btn primary !text-sm w-full">Instagram</button>
-                  <button type="button" onClick={() => redirectTo("gmail")} className="isaac-btn primary !text-sm w-full">Gmail</button>
+                <p className="font-heading text-[10px] tracking-[4px] text-[var(--text-faint)] uppercase mb-3">Enviar por</p>
+                <div className="flex flex-col gap-3">
+                  <button type="button" onClick={() => redirectTo("telegram")}
+                    className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group text-left">
+                    <span className="text-lg">✈️</span>
+                    <div className="flex-1 text-left">
+                      <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Telegram</span>
+                      <p className="text-[10px] text-[var(--text-faint)]">@AlanTST</p>
+                    </div>
+                    <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  </button>
+                  <button type="button" onClick={() => redirectTo("instagram")}
+                    className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group text-left">
+                    <span className="text-lg">📸</span>
+                    <div className="flex-1 text-left">
+                      <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Instagram</span>
+                      <p className="text-[10px] text-[var(--text-faint)]">@alan_t.mouse</p>
+                    </div>
+                    <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  </button>
+                  <button type="button" onClick={() => redirectTo("gmail")}
+                    className="comm-card flex items-center gap-4 p-4 rounded bg-[var(--ink2)] !border-[#2a1a20] hover:!border-[var(--mag)] transition-all group text-left">
+                    <span className="text-lg">✉️</span>
+                    <div className="flex-1 text-left">
+                      <span className="font-heading text-xs tracking-[2px] text-[var(--parch)] group-hover:text-[var(--mag)] transition-colors">Gmail</span>
+                      <p className="text-[10px] text-[var(--text-faint)]">alantcommission@gmail.com</p>
+                    </div>
+                    <span className="text-[var(--mag)] text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                  </button>
                 </div>
               </div>
             ) : (
