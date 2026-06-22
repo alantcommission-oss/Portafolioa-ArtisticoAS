@@ -2,68 +2,45 @@
 
 import { useRef, useState, useCallback } from "react";
 
-const CHORDS: number[][] = [
-  [261.63, 329.63, 392.00, 493.88], // Cmaj7
-  [293.66, 349.23, 440.00, 523.25], // Dm7
-  [329.63, 392.00, 523.25, 587.33], // Em7
-  [261.63, 329.63, 440.00, 523.25], // Am7
-  [220.00, 261.63, 329.63, 392.00], // Fmaj7
-  [261.63, 329.63, 392.00, 440.00], // C
+const NOTES = [
+  523.25, 587.33, 659.25, 783.99, 880.00, 1046.50,
+  880.00, 783.99, 659.25, 587.33, 523.25, 587.33,
+  659.25, 783.99, 659.25, 587.33, 523.25, 587.33,
+  659.25, 783.99, 880.00, 1046.50, 880.00, 783.99,
+  659.25, 587.33, 523.25,
 ];
 
 let ctx: AudioContext | null = null;
 
 export default function MusicPlayer() {
   const [playing, setPlaying] = useState(false);
-  const state = useRef({ nodes: [] as OscillatorNode[], gain: null as GainNode | null, chordIdx: 0, stopped: false });
+  const state = useRef({ idx: 0, stopped: false });
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const stop = useCallback(() => {
     state.current.stopped = true;
     if (timerRef.current) clearTimeout(timerRef.current);
-    state.current.nodes.forEach((n) => { try { n.stop(); } catch {} });
-    state.current.nodes = [];
-    if (state.current.gain) {
-      try { state.current.gain.gain.setValueAtTime(0, ctx!.currentTime); } catch {}
-    }
   }, []);
 
-  const playChord = useCallback(() => {
-    if (state.current.stopped) return;
-    if (!ctx) return;
+  const playNote = useCallback(() => {
+    if (state.current.stopped || !ctx) return;
     const now = ctx.currentTime;
-    const freqs = CHORDS[state.current.chordIdx];
-    state.current.chordIdx = (state.current.chordIdx + 1) % CHORDS.length;
+    const freq = NOTES[state.current.idx];
+    state.current.idx = (state.current.idx + 1) % NOTES.length;
 
-    state.current.nodes.forEach((n) => { try { n.stop(now); } catch {} });
+    const osc = ctx.createOscillator();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(freq, now);
 
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.06, now + 1);
-    gain.gain.linearRampToValueAtTime(0.04, now + 4);
-    gain.gain.linearRampToValueAtTime(0, now + 5.5);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc.connect(gain);
     gain.connect(ctx.destination);
-    state.current.gain = gain;
+    osc.start(now);
+    osc.stop(now + 0.25);
 
-    const nodes: OscillatorNode[] = [];
-    freqs.forEach((freq) => {
-      const osc = ctx!.createOscillator();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, now);
-      const detune = (Math.random() - 0.5) * 0.3;
-      osc.detune.setValueAtTime(detune, now);
-      const nodeGain = ctx!.createGain();
-      nodeGain.gain.setValueAtTime(0.4, now);
-      nodeGain.gain.linearRampToValueAtTime(0, now + 5.5);
-      osc.connect(nodeGain);
-      nodeGain.connect(gain);
-      osc.start(now);
-      osc.stop(now + 5.5);
-      nodes.push(osc);
-    });
-    state.current.nodes = nodes;
-
-    timerRef.current = setTimeout(playChord, 5500);
+    timerRef.current = setTimeout(playNote, 200 + Math.random() * 100);
   }, []);
 
   const toggle = useCallback(() => {
@@ -75,10 +52,10 @@ export default function MusicPlayer() {
     if (!ctx) ctx = new AudioContext();
     if (ctx.state === "suspended") ctx.resume();
     state.current.stopped = false;
-    state.current.chordIdx = 0;
+    state.current.idx = 0;
     setPlaying(true);
-    playChord();
-  }, [playing, playChord, stop]);
+    playNote();
+  }, [playing, playNote, stop]);
 
   return (
     <button
