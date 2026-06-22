@@ -31,6 +31,7 @@ export default function GalleryScreen({ onBack }: Props) {
   const [selected, setSelected] = useState<Artwork | null>(null);
   const [related, setRelated] = useState<Artwork[]>([]);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
+  const [activeTag, setActiveTag] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/artworks")
@@ -41,6 +42,9 @@ export default function GalleryScreen({ onBack }: Props) {
       });
   }, []);
 
+  const allTags = [...new Set(artworks.flatMap((a) => a.tags))].sort();
+  const filtered = activeTag ? artworks.filter((a) => a.tags.includes(activeTag)) : artworks;
+
   function openDetail(art: Artwork) {
     setSelected(art);
     const others = artworks.filter((a) => a.id !== art.id);
@@ -49,10 +53,10 @@ export default function GalleryScreen({ onBack }: Props) {
 
   return (
     <div className="page visible flex flex-col items-center z-10 px-4 overflow-y-auto py-10">
-      <button onClick={onBack} className="fixed left-4 top-1/2 -translate-y-1/2 z-[100] isaac-btn !text-[16px] !px-3 !py-4">
+      <button onClick={onBack} className="fixed top-4 left-4 z-[100] isaac-btn !text-[18px] !px-5 !py-3 bg-[var(--ink2)]/80 border border-[var(--mag)]/40 shadow-[0_0_20px_rgba(179,0,137,0.2)] hover:border-[var(--mag)]">
         ← {t("back")}
       </button>
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-5xl">
         <div className="text-center mb-8">
           <h2 className="font-heading text-sm tracking-[5px] text-[var(--mag)] uppercase mb-6">
             {t("gallery_title")}
@@ -65,9 +69,38 @@ export default function GalleryScreen({ onBack }: Props) {
           </p>
         ) : (
           <>
+            {/* tag filter */}
+            {allTags.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-2 mb-8">
+                <button
+                  onClick={() => setActiveTag(null)}
+                  className={`px-3 py-1.5 text-xs tracking-wider uppercase font-heading rounded border transition-all ${
+                    !activeTag
+                      ? "bg-[var(--mag)] text-white border-[var(--mag)]"
+                      : "bg-transparent text-[var(--text-faint)] border-[var(--mag)]/20 hover:border-[var(--mag)]/50 hover:text-[var(--mag)]"
+                  }`}
+                >
+                  {t("gallery_all")}
+                </button>
+                {allTags.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => setActiveTag(tag)}
+                    className={`px-3 py-1.5 text-xs tracking-wider uppercase font-heading rounded border transition-all ${
+                      activeTag === tag
+                        ? "bg-[var(--mag)] text-white border-[var(--mag)]"
+                        : "bg-transparent text-[var(--text-faint)] border-[var(--mag)]/20 hover:border-[var(--mag)]/50 hover:text-[var(--mag)]"
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* masonry grid */}
             <div className="gallery-masonry">
-              {artworks.map((art) => {
+              {filtered.map((art) => {
                 const isObscene = art.tags.includes("obsceno");
                 const isRevealed = revealed.has(art.id);
                 return (
@@ -132,11 +165,11 @@ export default function GalleryScreen({ onBack }: Props) {
                     {/* related */}
                     {related.length > 0 && (
                       <div>
-                        <p className="font-heading text-[9px] tracking-[3px] text-[var(--text-faint)] uppercase mb-2">Relacionados</p>
-                        <div className="grid grid-cols-4 gap-2">
+                        <p className="font-heading text-[11px] tracking-[3px] text-[var(--text-faint)] uppercase mb-3">{t("gallery_related")}</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           {related.map((r) => (
                             <button key={r.id} onClick={() => openDetail(r)}
-                              className="rounded overflow-hidden border border-[#2a1a20] hover:border-[var(--mag)] transition-all">
+                              className="rounded overflow-hidden border border-[#2a1a20] hover:border-[var(--mag)] hover:scale-110 transition-all duration-300">
                               <img src={r.imageUrl} alt={r.title} className="w-full aspect-square object-cover" />
                             </button>
                           ))}
