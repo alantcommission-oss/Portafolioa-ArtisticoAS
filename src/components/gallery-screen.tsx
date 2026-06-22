@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLang } from "@/lib/i18n/language-context";
 
 interface Artwork {
@@ -32,6 +32,16 @@ export default function GalleryScreen({ onBack }: Props) {
   const [related, setRelated] = useState<Artwork[]>([]);
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const [activeTag, setActiveTag] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (selected) setSelected(null);
+      else onBack();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
 
   useEffect(() => {
     fetch("/api/gallery")
@@ -101,7 +111,7 @@ export default function GalleryScreen({ onBack }: Props) {
           <>
             {/* tag filter */}
             {allTags.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-2 mb-8">
+              <div className="flex flex-col items-center gap-2 mb-8">
                 <button
                   onClick={() => setActiveTag(null)}
                   className={`px-3 py-1.5 text-xs tracking-wider uppercase font-heading rounded border transition-all ${
