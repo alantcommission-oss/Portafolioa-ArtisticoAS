@@ -7,15 +7,22 @@ async function main() {
   const email = "admin@alantart.dev";
   const password = "admin123";
 
-  const hash = await bcrypt.hash(password, 12);
-
-  const admin = await prisma.admin.upsert({
-    where: { email },
-    update: { passwordHash: hash },
-    create: { email, passwordHash: hash },
-  });
-
-  console.log(`Admin creado: ${admin.email}`);
+  // Verify existing admin
+  const existing = await prisma.admin.findUnique({ where: { email } });
+  if (existing) {
+    const valid = await bcrypt.compare(password, existing.passwordHash);
+    console.log(`Admin exists: ${existing.email}, password valid: ${valid}`);
+    if (!valid) {
+      console.log("Re-hashing password...");
+      const hash = await bcrypt.hash(password, 12);
+      await prisma.admin.update({ where: { email }, data: { passwordHash: hash } });
+      console.log("Password re-hashed");
+    }
+  } else {
+    const hash = await bcrypt.hash(password, 12);
+    const admin = await prisma.admin.create({ data: { email, passwordHash: hash } });
+    console.log(`Admin creado: ${admin.email}`);
+  }
 
   const categories = [
     { name: "Stickers", basePrice: 5, headshotPrice: 5, halfbodyPrice: null, fullbodyPrice: null, sortOrder: 1 },
