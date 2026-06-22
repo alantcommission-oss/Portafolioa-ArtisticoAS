@@ -24,6 +24,19 @@ a, button, input, textarea, select, summary {
   --text-faint: #8a7a6a;
 }
 
+.light {
+  --ink: #faf6f1;
+  --ink2: #f0ebe5;
+  --mag: #a00078;
+  --mag-glow: rgba(160, 0, 120, 0.3);
+  --mag-dim: rgba(160, 0, 120, 0.08);
+  --parch: #2c1810;
+  --parch-dim: rgba(44, 24, 16, 0.15);
+  --parch-mid: rgba(44, 24, 16, 0.5);
+  --text-body: #3a2a20;
+  --text-faint: #7a6a5a;
+}
+
 @theme inline {
   --color-background: var(--ink);
   --color-foreground: var(--parch);
@@ -35,7 +48,7 @@ a, button, input, textarea, select, summary {
 }
 
 @layer base {
-  * { @apply border-[#2a1a20]; }
+  * { @apply border-[var(--parch-dim)]; }
   body {
     @apply bg-[var(--ink)] text-[var(--text-body)] font-body antialiased;
     cursor: default;
@@ -55,6 +68,7 @@ a, button, input, textarea, select, summary {
   background-repeat: repeat;
   background-size: 256px 256px;
 }
+.light #grain-overlay { opacity: 0.02; }
 
 /* ── scanlines ── */
 #scanlines {
@@ -68,6 +82,7 @@ a, button, input, textarea, select, summary {
     rgba(0,0,0,0.08) 3px
   );
 }
+.light #scanlines { background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px); }
 
 /* ── vignette ── */
 #vignette {
@@ -75,6 +90,7 @@ a, button, input, textarea, select, summary {
   pointer-events: none;
   background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(0,0,0,0.85) 100%);
 }
+.light #vignette { background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 30%, rgba(0,0,0,0.06) 100%); }
 
 /* ── page transitions ── */
 .page {

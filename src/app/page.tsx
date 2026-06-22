@@ -9,6 +9,7 @@ import GalleryScreen from "@/components/gallery-screen";
 import ContactsScreen from "@/components/contacts-screen";
 import CursorFollower from "@/components/cursor-follower";
 import KeyboardTutorial from "@/components/keyboard-tutorial";
+import ThemeToggle from "@/components/theme-toggle";
 import { useLang } from "@/lib/i18n/language-context";
 
 type Screen = "title" | "menu" | "comm-dibujo" | "comm-pagina" | "gallery" | "contacts";
@@ -39,6 +40,7 @@ export default function Home() {
       {screen === "gallery" && <GalleryScreen onBack={() => navigate("menu")} />}
       {screen === "contacts" && <ContactsScreen onBack={() => navigate("menu")} />}
 
+      <ThemeToggle />
       <CursorFollower />
       <KeyboardTutorial />
       <a
