@@ -21,7 +21,6 @@ export default function Home() {
   const { t } = useLang();
   const [screen, setScreen] = useState<Screen>("title");
   const [showGame, setShowGame] = useState(false);
-  const [gameCount, setGameCount] = useState(0);
 
   const navigate = (s: Screen) => {
     setShowGame(false);
@@ -41,7 +40,6 @@ export default function Home() {
             else if (id === "contacts") navigate("contacts");
             else if (id === "game") {
               setShowGame(true);
-              setGameCount(0);
             }
           }}
           onBack={() => navigate("title")}
@@ -52,17 +50,13 @@ export default function Home() {
       {!showGame && screen === "gallery" && <GalleryScreen onBack={() => navigate("menu")} />}
       {!showGame && screen === "contacts" && <ContactsScreen onBack={() => navigate("menu")} />}
 
-      {showGame && (
-        <>
-          <GameMode onBack={() => { setShowGame(false); setScreen("menu"); }} count={gameCount} />
-          <CollectibleGame onCollect={() => setGameCount((c) => c + 1)} />
-        </>
-      )}
+      {showGame && <GameMode onBack={() => { setShowGame(false); }} />}
 
       <MusicPlayer />
       <ThemeToggle />
       <CursorFollower />
       <KeyboardTutorial />
+      <CollectibleGame />
       <a
         href="/admin"
         className="fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ink2)] border border-[var(--mag)]/30 text-[var(--mag)] hover:bg-[var(--mag)] hover:text-[var(--ink)] transition-all opacity-50 hover:opacity-100 text-lg"
