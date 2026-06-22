@@ -1,38 +1,35 @@
 import type { Metadata } from "next";
 import { Cinzel, Crimson_Text } from "next/font/google";
 import "./globals.css";
+import { LangProvider } from "@/lib/i18n/language-context";
 
 const cinzel = Cinzel({
-  variable: "--font-cinzel",
   subsets: ["latin"],
+  variable: "--font-cinzel",
   display: "swap",
 });
 
 const crimson = Crimson_Text({
-  variable: "--font-crimson",
-  subsets: ["latin"],
   weight: ["400", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-crimson",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Alan T - Dark Fantasy Artist",
-  description:
-    "Portfolio of Alan T — dark fantasy and character art. Commissions open.",
+  title: "AlantArt — Portafolio",
+  description: "Ilustración · Furry Art · Comisiones",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${cinzel.variable} ${crimson.variable} h-full`}
-      data-scroll-behavior="smooth"
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="es" className={`${cinzel.variable} ${crimson.variable}`}>
+      <body>
+        <div id="grain-overlay" />
+        <div id="scanlines" />
+        <div id="vignette" />
+        <LangProvider>{children}</LangProvider>
+      </body>
     </html>
   );
 }
