@@ -75,17 +75,20 @@ export default function CommissionsScreen({ onBack, type }: Props) {
     return pageCat && desc && files.length >= 1;
   };
 
+  const [orderMsg, setOrderMsg] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const orderType = type === "dibujo" ? "Dibujo" : "Página web";
     const details = type === "dibujo"
       ? `Categoría: ${category} | Tipo: ${bodyType} | Shade&Shine: ${shading} | Personaje extra: ${extraChar} | Sticker: ${sticker} | NSFW: ${nsfw} | Fondo: ${hasBg}`
       : `Categoría: ${pageCat} | Tiempo: ${timeLimit} | Presupuesto: ${budget} | Propósito: ${purpose}`;
+    const msg = `${details}\n\nDescripción:\n${desc}`;
     const payload = {
       name: "Pedido vía web",
       email: "pedido@alantart.dev",
       subject: `Pedido de comisión: ${orderType}`,
-      message: `${details}\n\nDescripción:\n${desc}`,
+      message: msg,
     };
     try {
       const res = await fetch("/api/contact", {
@@ -93,11 +96,24 @@ export default function CommissionsScreen({ onBack, type }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (res.ok) setSent(true);
+      if (res.ok) {
+        setOrderMsg(msg);
+        setSent(true);
+      }
     } catch {
       alert("Error al enviar el pedido. Intentalo de nuevo.");
     }
   };
+
+  function redirectTo(platform: "telegram" | "instagram" | "gmail") {
+    const text = encodeURIComponent(`${orderMsg}\n\n¡Hola Alan! Quiero coordinar esta comisión.`);
+    const urls = {
+      telegram: `https://t.me/AlanTMouse?text=${text}`,
+      instagram: "https://www.instagram.com/alan_t.mouse/",
+      gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=alantcommission@gmail.com&body=${text}`,
+    };
+    window.open(urls[platform], "_blank", "noopener");
+  }
 
   /* ── DRAWING FLOW ── */
   if (type === "dibujo") {
@@ -242,9 +258,21 @@ export default function CommissionsScreen({ onBack, type }: Props) {
                   )}
                 </div>
               </div>
-              <button type="submit" disabled={!canSubmit()} className="isaac-btn primary w-full !text-center !block disabled:opacity-30">
-                {sent ? t("order_sent") : t("order_submit")}
-              </button>
+              {sent ? (
+                <div className="text-center">
+                  <p className="font-heading text-xs tracking-[3px] text-[var(--mag)] mb-4">{t("order_sent")}</p>
+                  <p className="font-heading text-[10px] tracking-[4px] text-[var(--text-faint)] uppercase mb-3">Contactarme para coordinar</p>
+                  <div className="flex flex-col gap-2">
+                    <button type="button" onClick={() => redirectTo("telegram")} className="isaac-btn primary !text-sm w-full">Telegram</button>
+                    <button type="button" onClick={() => redirectTo("instagram")} className="isaac-btn primary !text-sm w-full">Instagram</button>
+                    <button type="button" onClick={() => redirectTo("gmail")} className="isaac-btn primary !text-sm w-full">Gmail</button>
+                  </div>
+                </div>
+              ) : (
+                <button type="submit" disabled={!canSubmit()} className="isaac-btn primary w-full !text-center !block disabled:opacity-30">
+                  {t("order_submit")}
+                </button>
+              )}
             </form>
           )}
         </div>
@@ -331,9 +359,21 @@ export default function CommissionsScreen({ onBack, type }: Props) {
                 )}
               </div>
             </div>
-            <button type="submit" disabled={!canSubmit()} className="isaac-btn primary w-full !text-center !block disabled:opacity-30">
-              {sent ? t("order_sent") : t("order_submit")}
-            </button>
+            {sent ? (
+              <div className="text-center">
+                <p className="font-heading text-xs tracking-[3px] text-[var(--mag)] mb-4">{t("order_sent")}</p>
+                <p className="font-heading text-[10px] tracking-[4px] text-[var(--text-faint)] uppercase mb-3">Contactarme para coordinar</p>
+                <div className="flex flex-col gap-2">
+                  <button type="button" onClick={() => redirectTo("telegram")} className="isaac-btn primary !text-sm w-full">Telegram</button>
+                  <button type="button" onClick={() => redirectTo("instagram")} className="isaac-btn primary !text-sm w-full">Instagram</button>
+                  <button type="button" onClick={() => redirectTo("gmail")} className="isaac-btn primary !text-sm w-full">Gmail</button>
+                </div>
+              </div>
+            ) : (
+              <button type="submit" disabled={!canSubmit()} className="isaac-btn primary w-full !text-center !block disabled:opacity-30">
+                {t("order_submit")}
+              </button>
+            )}
           </form>
         )}
       </div>
