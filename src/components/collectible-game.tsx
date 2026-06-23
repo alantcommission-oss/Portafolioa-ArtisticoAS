@@ -77,41 +77,43 @@ export default function CollectibleGame({ gameMode }: Props) {
       const cy = cursorPos.y;
       const gm = gameModeRef.current;
 
-      const b = ballRef.current;
-      const dx = cx - (b.x + 0.5);
-      const dy = cy - (b.y + 0.5);
-      if (dx * dx + dy * dy < COLLECT_DIST * COLLECT_DIST) {
-        playCollectSound();
-        const next = randPos();
-        ballRef.current = next;
-        setBall(next);
-        setCount((c) => {
-          const n = c + 1;
-          countRef.current = n;
-          if (gm && n >= triNextSpawn.current) {
-            triNextSpawn.current = n + 5;
-            const tp = randPos();
-            triRef.current = tp;
-            setTri(tp);
-          }
-          return n;
-        });
-        setPop(true);
-        setTimeout(() => setPop(false), 200);
-      }
-
-      if (gm && countRef.current >= 5) {
-        const t = triRef.current;
-        const tdx = cx - (t.x + 0.5);
-        const tdy = cy - (t.y + 0.5);
-        if (tdx * tdx + tdy * tdy < COLLECT_DIST * COLLECT_DIST) {
-          playHitSound();
+      if (gm) {
+        const b = ballRef.current;
+        const dx = cx - (b.x + 0.5);
+        const dy = cy - (b.y + 0.5);
+        if (dx * dx + dy * dy < COLLECT_DIST * COLLECT_DIST) {
+          playCollectSound();
           const next = randPos();
-          triRef.current = next;
-          setTri(next);
-          setTriHit(true);
-          setTimeout(() => setTriHit(false), 200);
-          setCount((c) => Math.max(0, c - 1));
+          ballRef.current = next;
+          setBall(next);
+          setCount((c) => {
+            const n = c + 1;
+            countRef.current = n;
+            if (n >= triNextSpawn.current) {
+              triNextSpawn.current = n + 5;
+              const tp = randPos();
+              triRef.current = tp;
+              setTri(tp);
+            }
+            return n;
+          });
+          setPop(true);
+          setTimeout(() => setPop(false), 200);
+        }
+
+        if (countRef.current >= 5) {
+          const t = triRef.current;
+          const tdx = cx - (t.x + 0.5);
+          const tdy = cy - (t.y + 0.5);
+          if (tdx * tdx + tdy * tdy < COLLECT_DIST * COLLECT_DIST) {
+            playHitSound();
+            const next = randPos();
+            triRef.current = next;
+            setTri(next);
+            setTriHit(true);
+            setTimeout(() => setTriHit(false), 200);
+            setCount((c) => Math.max(0, c - 1));
+          }
         }
       }
 
@@ -123,20 +125,22 @@ export default function CollectibleGame({ gameMode }: Props) {
 
   return (
     <>
-      <div
-        className="fixed pointer-events-none z-[9998] flex items-center justify-center"
-        style={{ left: `${ball.x}%`, top: `${ball.y}%` }}
-      >
+      {gameMode && (
         <div
-          className={`rounded-full transition-transform duration-150 ${pop ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
-          style={{
-            width: "14px",
-            height: "14px",
-            background: "radial-gradient(circle at 35% 35%, #8f8, #080)",
-            boxShadow: "0 0 10px rgba(0,200,0,0.7)",
-          }}
-        />
-      </div>
+          className="fixed pointer-events-none z-[9998] flex items-center justify-center"
+          style={{ left: `${ball.x}%`, top: `${ball.y}%` }}
+        >
+          <div
+            className={`rounded-full transition-transform duration-150 ${pop ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
+            style={{
+              width: "14px",
+              height: "14px",
+              background: "radial-gradient(circle at 35% 35%, #8f8, #080)",
+              boxShadow: "0 0 10px rgba(0,200,0,0.7)",
+            }}
+          />
+        </div>
+      )}
 
       {gameMode && count >= 5 && (
         <div
