@@ -57,15 +57,22 @@ interface Props {
   gameMode?: boolean;
 }
 
+interface TriData {
+  x: number;
+  y: number;
+  id: number;
+  hit: boolean;
+}
+
 export default function CollectibleGame({ gameMode }: Props) {
   const [count, setCount] = useState(0);
   const [ball, setBall] = useState(randPos);
   const ballRef = useRef(ball);
   const [pop, setPop] = useState(false);
-  const [tri, setTri] = useState(randPos);
-  const triRef = useRef(tri);
-  const triNextSpawn = useRef(5);
-  const [triHit, setTriHit] = useState(false);
+  const [tris, setTris] = useState<TriData[]>([]);
+  const trisRef = useRef<TriData[]>([]);
+  const triIdCounter = useRef(0);
+  const nextSpawn = useRef(5);
   const countRef = useRef(0);
   const gameModeRef = useRef(gameMode);
   gameModeRef.current = gameMode;
@@ -89,11 +96,11 @@ export default function CollectibleGame({ gameMode }: Props) {
           setCount((c) => {
             const n = c + 1;
             countRef.current = n;
-            if (n >= triNextSpawn.current) {
-              triNextSpawn.current = n + 5;
-              const tp = randPos();
-              triRef.current = tp;
-              setTri(tp);
+            if (n >= nextSpawn.current) {
+              nextSpawn.current = n + 5;
+              const t: TriData = { ...randPos(), id: ++triIdCounter.current, hit: false };
+              trisRef.current = [...trisRef.current, t];
+              setTris(trisRef.current);
             }
             return n;
           });
@@ -101,18 +108,24 @@ export default function CollectibleGame({ gameMode }: Props) {
           setTimeout(() => setPop(false), 200);
         }
 
-        if (countRef.current >= 5) {
-          const t = triRef.current;
+        const triArr = trisRef.current;
+        for (let i = 0; i < triArr.length; i++) {
+          const t = triArr[i];
           const tdx = cx - (t.x + 0.5);
           const tdy = cy - (t.y + 0.5);
           if (tdx * tdx + tdy * tdy < COLLECT_DIST * COLLECT_DIST) {
             playHitSound();
-            const next = randPos();
-            triRef.current = next;
-            setTri(next);
-            setTriHit(true);
-            setTimeout(() => setTriHit(false), 200);
+            const next = { ...randPos(), id: t.id, hit: true };
+            triArr[i] = next;
+            trisRef.current = triArr;
+            setTris([...triArr]);
+            setTimeout(() => {
+              triArr[i] = { ...triArr[i], hit: false };
+              trisRef.current = triArr;
+              setTris([...triArr]);
+            }, 200);
             setCount((c) => Math.max(0, c - 1));
+            break;
           }
         }
       }
@@ -142,13 +155,14 @@ export default function CollectibleGame({ gameMode }: Props) {
         </div>
       )}
 
-      {gameMode && count >= 5 && (
+      {gameMode && tris.map((t) => (
         <div
+          key={t.id}
           className="fixed pointer-events-none z-[9998] flex items-center justify-center"
-          style={{ left: `${tri.x}%`, top: `${tri.y}%` }}
+          style={{ left: `${t.x}%`, top: `${t.y}%` }}
         >
           <div
-            className={`transition-transform duration-150 ${triHit ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
+            className={`transition-transform duration-150 ${t.hit ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
             style={{
               width: 0,
               height: 0,
@@ -159,7 +173,7 @@ export default function CollectibleGame({ gameMode }: Props) {
             }}
           />
         </div>
-      )}
+      ))}
 
       <div className="fixed top-4 left-4 z-[9999] font-heading text-xs tracking-[3px] text-[var(--parch)] bg-[var(--ink2)] border border-[var(--mag)]/20 rounded px-3 py-1.5 select-none">
         ✦ {count}
