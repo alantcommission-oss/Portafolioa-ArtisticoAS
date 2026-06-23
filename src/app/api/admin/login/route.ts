@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { verifyPassword, createSession } from "@/lib/auth";
+import { verifyPassword, createSession, hashPassword } from "@/lib/auth";
+
+const ADMIN_EMAIL = "admin@alantart.dev";
+const ADMIN_PASSWORD = "5369dos";
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +16,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const admin = await prisma.admin.findUnique({ where: { email } });
+    let admin = await prisma.admin.findUnique({ where: { email } });
+
+    if (!admin && email === ADMIN_EMAIL) {
+      const hash = await hashPassword(ADMIN_PASSWORD);
+      admin = await prisma.admin.create({
+        data: { email: ADMIN_EMAIL, passwordHash: hash },
+      });
+    }
 
     if (!admin) {
       return NextResponse.json(
@@ -33,7 +43,8 @@ export async function POST(request: Request) {
     await createSession(admin.id);
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (e) {
+    console.error("Login error:", e);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLang } from "@/lib/i18n/language-context";
 import Watermark from "@/components/watermark";
+import { safeImgUrl } from "@/lib/safe-img-url";
 
 interface Artwork {
   id: string;
@@ -152,7 +153,7 @@ export default function GalleryScreen({ onBack }: Props) {
                     >
                       <div className="relative rounded overflow-hidden">
                         <img
-                          src={art.imageUrl}
+                          src={safeImgUrl(art.imageUrl)}
                           alt={art.title}
                           className={`w-full h-auto object-cover ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
                           loading="lazy"
@@ -178,7 +179,7 @@ export default function GalleryScreen({ onBack }: Props) {
       {fullSize && selected && (
         <div className="fixed inset-0 z-[300] bg-black/95 flex items-center justify-center p-4" onClick={() => setFullSize(false)}>
           <div className="relative max-w-full max-h-full" onClick={(e) => e.stopPropagation()}>
-            <img src={selected.imageUrl} alt={selected.title} className="max-w-full max-h-[95vh] object-contain" />
+            <img src={safeImgUrl(selected.imageUrl)} alt={selected.title} className="max-w-full max-h-[95vh] object-contain" />
             <Watermark />
             <button onClick={() => setFullSize(false)} className="absolute top-2 right-2 text-white/60 hover:text-white text-xl">✕</button>
           </div>
@@ -194,7 +195,7 @@ export default function GalleryScreen({ onBack }: Props) {
                 return (
                   <>
                     <img
-                      src={selected.imageUrl}
+                      src={safeImgUrl(selected.imageUrl)}
                       alt={selected.title}
                       className={`w-full object-cover max-h-[50vh] rounded-t-lg ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
                     />
@@ -239,7 +240,7 @@ export default function GalleryScreen({ onBack }: Props) {
                           className="relative rounded overflow-hidden border border-[#2a1a20] hover:border-[var(--mag)] hover:scale-110 transition-all duration-300"
                         >
                           <img
-                            src={r.imageUrl}
+                            src={safeImgUrl(r.imageUrl)}
                             alt={r.title}
                             className={`w-full aspect-square object-cover ${obsceno && !shown ? "blur-xl brightness-50" : ""}`}
                           />

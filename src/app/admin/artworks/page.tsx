@@ -2,6 +2,7 @@
 
 import { useState, useEffect, FormEvent, useRef } from "react";
 import { Plus, Pencil, Trash2, X, Upload } from "lucide-react";
+import { safeImgUrl } from "@/lib/safe-img-url";
 
 interface Artwork {
   id: string;
@@ -313,7 +314,7 @@ export default function AdminArtworksPage() {
                 <tr key={art.id} className="border-b border-border/50">
                   <td className="py-3 pr-3">
                     <img
-                      src={art.imageUrl}
+                      src={safeImgUrl(art.imageUrl)}
                       alt={art.title}
                       className="w-12 h-12 object-cover rounded"
                     />
