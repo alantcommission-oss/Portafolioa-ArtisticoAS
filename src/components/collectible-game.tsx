@@ -52,6 +52,7 @@ function randPos() {
 }
 
 const COLLECT_DIST = 7;
+const TRI_COLLECT_DIST = 3;
 
 interface Props {
   gameMode?: boolean;
@@ -113,7 +114,8 @@ export default function CollectibleGame({ gameMode }: Props) {
           const t = triArr[i];
           const tdx = cx - (t.x + 0.5);
           const tdy = cy - (t.y + 0.5);
-          if (tdx * tdx + tdy * tdy < COLLECT_DIST * COLLECT_DIST) {
+          if (tdx * tdx + tdy * tdy < TRI_COLLECT_DIST * TRI_COLLECT_DIST) {
+            cursorPos.hitAt = Date.now();
             playHitSound();
             const next = { ...randPos(), id: t.id, hit: true };
             triArr[i] = next;

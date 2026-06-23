@@ -42,8 +42,18 @@ export default function CursorFollower() {
       cursorPos.x = currentX;
       cursorPos.y = currentY;
       if (imgRef.current) {
-        imgRef.current.style.left = `${currentX}%`;
-        imgRef.current.style.top = `${currentY}%`;
+        const img = imgRef.current;
+        img.style.left = `${currentX}%`;
+        img.style.top = `${currentY}%`;
+        const elapsed = Date.now() - cursorPos.hitAt;
+        if (elapsed < 150) {
+          const intensity = (1 - elapsed / 150) * 4;
+          const sx = 1 + (Math.random() - 0.5) * intensity * 0.06;
+          const sy = 1 + (Math.random() - 0.5) * intensity * 0.06;
+          img.style.transform = `translate(-50%, -50%) scale(${sx},${sy})`;
+        } else {
+          img.style.transform = "translate(-50%, -50%)";
+        }
       }
       raf = requestAnimationFrame(tick);
     };
