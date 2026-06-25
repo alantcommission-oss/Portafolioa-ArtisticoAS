@@ -114,19 +114,42 @@ export default function PromoBanner() {
           <div className="overflow-y-auto p-4 space-y-3 text-xs">
             {tab === "promo" && (
               <>
-                  <p className="text-white/90 leading-relaxed font-[var(--font-crimson)] text-sm">
-                    Aproveché mi libre albedrío para crearme un portafolios, junto con un mini juego para entretenimiento. Si querés un dibujo <strong>GRATIS de medio cuerpo</strong> tendrás que conseguir <strong className="text-[var(--mag)]">100 pelotitas</strong>.
-                  </p>
-                  <div className="bg-black/30 rounded-lg p-3 space-y-1 text-white/70 text-[11px]">
-                    <p><strong className="text-[var(--mag)]">🎁 Premio:</strong> Dibujo sticker medio cuerpo, <strong>sin fondo</strong>.</p>
-                    <p><strong className="text-white/80">📋 Cómo reclamar:</strong></p>
-                    <ol className="list-decimal list-inside space-y-1 pl-1">
-                      <li>Llegá a 100 pelotitas</li>
-                      <li>Sacá <strong>captura de pantalla</strong> de tu perfil acá mostrando las 100</li>
-                      <li>Enviala por <strong>Instagram DM</strong> a <strong className="text-[var(--mag)]">@alant_arts1</strong></li>
-                      <li>Te voy a responder para coordinar tu dibujo</li>
-                    </ol>
-                  </div>
+                <div className="text-center">
+                  <h3 className="text-lg font-bold text-[var(--mag)] font-[var(--font-cinzel)] tracking-wide">🎯 PELOTITA CHALLENGE</h3>
+                  <p className="text-white/50 text-[10px] mt-1">Ganate un dibujo GRATIS</p>
+                </div>
+
+                <p className="text-white/90 leading-relaxed font-[var(--font-crimson)] text-sm">
+                  <strong className="text-white">@alant_arts1</strong> — Aprovechó su libre albedrío para crearse un portafolio, junto con un mini juego para entretenimiento. Si querés un dibujo <strong>GRATIS</strong>, participá.
+                </p>
+
+                <div className="bg-black/30 rounded-lg p-3 space-y-1 text-white/70 text-[11px]">
+                  <p className="font-bold text-white/90 text-xs">📜 Reglas</p>
+                  <ul className="list-disc list-inside space-y-0.5">
+                    <li>Registrate con tu Instagram abajo</li>
+                    <li>Sumá <strong className="text-[var(--mag)]">100 pelotitas</strong> (visitando + jugando)</li>
+                    <li>El que llegue primero, gana</li>
+                  </ul>
+                  <p className="mt-2"><strong className="text-[var(--mag)]">🎁 Premio:</strong> Dibujo <strong>sticker medio cuerpo, sin fondo</strong>.</p>
+                </div>
+
+                <div className="bg-black/30 rounded-lg p-3 space-y-1 text-white/70 text-[11px]">
+                  <p className="font-bold text-white/90 text-xs">📋 Cómo reclamar</p>
+                  <ol className="list-decimal list-inside space-y-0.5 pl-1">
+                    <li>Llegá a 100 pelotitas</li>
+                    <li>Sacá <strong>captura de pantalla</strong> de tu perfil acá mostrando las 100</li>
+                    <li>Enviala por <strong>Instagram DM</strong> a <strong className="text-[var(--mag)]">@alant_arts1</strong></li>
+                    <li>Coordinamos tu dibujo</li>
+                  </ol>
+                </div>
+
+                <div className="bg-[var(--mag)]/10 border border-[var(--mag)]/20 rounded-lg p-3 text-center">
+                  <p className="text-white/80 text-xs font-semibold">🔗 Ingresá acá</p>
+                  <a href="https://portafolioa-artisticoas.onrender.com" target="_blank" rel="noopener noreferrer" className="text-[var(--mag)] text-xs underline hover:brightness-125 break-all">
+                    portafolioa-artisticoas.onrender.com
+                  </a>
+                  <p className="text-white/40 text-[10px] mt-1">⚠️ Si la página tarda en cargar, <strong className="text-white/70">refrescá (F5)</strong> — Render a veces se duerme un poco.</p>
+                </div>
 
                 {!me ? (
                   <div className="space-y-2 pt-2">
