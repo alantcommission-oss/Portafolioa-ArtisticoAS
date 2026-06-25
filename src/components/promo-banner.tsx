@@ -122,7 +122,7 @@ export default function PromoBanner() {
                 </div>
 
                 <p className="text-white/90 leading-relaxed font-[var(--font-crimson)] text-sm">
-                  <strong className="text-white">@alant_arts1</strong> — Aprovechó su libre albedrío para crearse un portafolio, junto con un mini juego para entretenimiento. Si querés un dibujo <strong>GRATIS</strong>, participá.
+                  <a href="https://www.instagram.com/alan_t.mouse/?hl=es-la" target="_blank" rel="noopener noreferrer" className="text-[var(--mag)] underline font-bold">@alan_t.mouse</a> — Aprovechó su libre albedrío para crearse un portafolio, junto con un mini juego para entretenimiento. Si querés un dibujo <strong>GRATIS</strong>, participá.
                 </p>
 
                 <div className="bg-black/30 rounded-lg p-3 space-y-1 text-white/70 text-[11px]">
@@ -139,7 +139,7 @@ export default function PromoBanner() {
                   <ol className="list-decimal list-inside space-y-0.5 pl-1">
                     <li>Llegá a 100 pelotitas</li>
                     <li>Sacá <strong>captura de pantalla</strong> de tu perfil acá</li>
-                    <li>Enviala por <strong>Instagram DM</strong> a <strong className="text-[var(--mag)]">@alant_arts1</strong></li>
+                    <li>Enviala por <strong>Instagram DM</strong> a <a href="https://www.instagram.com/alan_t.mouse/?hl=es-la" target="_blank" rel="noopener noreferrer" className="text-[var(--mag)] underline font-bold">@alan_t.mouse</a></li>
                     <li>Coordinamos tu dibujo</li>
                   </ol>
                 </div>
@@ -175,7 +175,7 @@ export default function PromoBanner() {
                       {me.points >= 100 && (
                         <div className="mt-2 bg-[var(--mag)]/20 border border-[var(--mag)]/40 rounded-lg p-3 text-center space-y-2">
                           <p className="text-[var(--mag)] font-bold text-sm">🎉 ¡Llegaste a 100!</p>
-                          <p className="text-white/70 text-[10px]">Sacá captura de esta pantalla y enviala por <strong>Instagram DM</strong> a <strong className="text-[var(--mag)]">@alant_arts1</strong> para coordinar tu dibujo.</p>
+                          <p className="text-white/70 text-[10px]">Sacá captura de esta pantalla y enviala por <strong>Instagram DM</strong> a <a href="https://www.instagram.com/alan_t.mouse/?hl=es-la" target="_blank" rel="noopener noreferrer" className="text-[var(--mag)] underline font-bold">@alan_t.mouse</a> para coordinar tu dibujo.</p>
                         </div>
                       )}
                     </div>
