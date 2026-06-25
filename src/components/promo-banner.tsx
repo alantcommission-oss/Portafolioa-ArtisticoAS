@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import BallGame from "./ball-game";
 
 type Participant = { instagram: string; points: number; visits: number };
 
 export default function PromoBanner() {
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState<"promo" | "leaderboard" | "game">("promo");
+  const [tab, setTab] = useState<"promo" | "leaderboard">("promo");
   const [instagram, setInstagram] = useState("");
   const [me, setMe] = useState<Participant | null>(null);
   const [leaderboard, setLeaderboard] = useState<Participant[]>([]);
@@ -103,12 +102,7 @@ export default function PromoBanner() {
             >
               🏅 Ranking
             </button>
-            <button
-              onClick={() => setTab("game")}
-              className={`flex-1 py-2 text-xs font-semibold transition ${tab === "game" ? "text-[var(--mag)] border-b-2 border-[var(--mag)]" : "text-white/50 hover:text-white/80"}`}
-            >
-              🎮 Jugar
-            </button>
+
           </div>
 
           <div className="overflow-y-auto p-4 space-y-3 text-xs">
@@ -143,13 +137,7 @@ export default function PromoBanner() {
                   </ol>
                 </div>
 
-                <div className="bg-[var(--mag)]/10 border border-[var(--mag)]/20 rounded-lg p-3 text-center">
-                  <p className="text-white/80 text-xs font-semibold">🔗 Ingresá acá</p>
-                  <a href="https://portafolioa-artisticoas.onrender.com" target="_blank" rel="noopener noreferrer" className="text-[var(--mag)] text-xs underline hover:brightness-125 break-all">
-                    portafolioa-artisticoas.onrender.com
-                  </a>
-                  <p className="text-white/40 text-[10px] mt-1">⚠️ Si la página tarda en cargar, <strong className="text-white/70">refrescá (F5)</strong> — Render a veces se duerme un poco.</p>
-                </div>
+
 
                 {!me ? (
                   <div className="space-y-2 pt-2">
@@ -189,25 +177,6 @@ export default function PromoBanner() {
                   </div>
                 )}
               </>
-            )}
-
-            {tab === "game" && (
-              <BallGame onPoints={(pts) => {
-                const stored = sessionStorage.getItem("promo_instagram");
-                if (!stored) return;
-                fetch("/api/promo", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ action: "game-score", instagram: stored, points: pts }),
-                }).then(r => r.json()).then(d => {
-                  if (d.instagram) {
-                    setMe(d);
-                    fetch("/api/promo?action=leaderboard").then(res => res.json()).then(dd => {
-                      if (Array.isArray(dd)) setLeaderboard(dd);
-                    });
-                  }
-                }).catch(() => {});
-              }} />
             )}
 
             {tab === "leaderboard" && (
