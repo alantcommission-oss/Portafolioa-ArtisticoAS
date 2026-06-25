@@ -13,6 +13,7 @@ import KeyboardTutorial from "@/components/keyboard-tutorial";
 import CollectibleGame from "@/components/collectible-game";
 import MusicPlayer from "@/components/music-player";
 import ThemeToggle from "@/components/theme-toggle";
+import PromoBanner from "@/components/promo-banner";
 import { useLang } from "@/lib/i18n/language-context";
 
 type Screen = "title" | "menu" | "comm-dibujo" | "comm-pagina" | "gallery" | "contacts";
@@ -57,6 +58,7 @@ export default function Home() {
       <CursorFollower />
       <KeyboardTutorial />
       <CollectibleGame gameMode={showGame} />
+      <PromoBanner />
       <a
         href="/admin"
         className="fixed bottom-6 right-6 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-[var(--ink2)] border border-[var(--mag)]/30 text-[var(--mag)] hover:bg-[var(--mag)] hover:text-[var(--ink)] transition-all opacity-50 hover:opacity-100 text-lg"

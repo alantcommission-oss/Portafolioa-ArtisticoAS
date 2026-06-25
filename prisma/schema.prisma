@@ -60,3 +60,12 @@ model ContactMessage {
   read    Boolean @default(false)
   createdAt DateTime @default(now())
 }
+
+model PromoParticipant {
+  id        String   @id @default(cuid())
+  instagram String   @unique
+  points    Int      @default(0)
+  visits    Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
