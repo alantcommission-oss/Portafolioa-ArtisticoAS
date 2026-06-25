@@ -3,6 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { cursorPos } from "@/lib/cursor-pos";
 
+function submitPromo(count: number) {
+  const instagram = sessionStorage.getItem("promo_instagram");
+  if (!instagram) return;
+  fetch("/api/promo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: "game-score", instagram, points: count }),
+  }).catch(() => {});
+}
+
 let audioCtx: AudioContext | null = null;
 
 function playCollectSound() {
@@ -75,6 +85,7 @@ export default function CollectibleGame({ gameMode }: Props) {
   const triIdCounter = useRef(0);
   const nextSpawn = useRef(5);
   const countRef = useRef(0);
+  const submittedRef = useRef(0);
   const gameModeRef = useRef(gameMode);
   gameModeRef.current = gameMode;
 
@@ -97,6 +108,10 @@ export default function CollectibleGame({ gameMode }: Props) {
           setCount((c) => {
             const n = c + 1;
             countRef.current = n;
+            if (gm && n - submittedRef.current >= 5) {
+              submittedRef.current = n;
+              submitPromo(5);
+            }
             if (n >= nextSpawn.current) {
               nextSpawn.current = n + 5;
               const t: TriData = { ...randPos(), id: ++triIdCounter.current, hit: false };
