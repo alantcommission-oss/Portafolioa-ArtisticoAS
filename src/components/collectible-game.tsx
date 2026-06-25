@@ -19,7 +19,6 @@ function playCollectSound() {
   if (!audioCtx) audioCtx = new AudioContext();
   if (audioCtx.state === "suspended") audioCtx.resume();
   const now = audioCtx.currentTime;
-
   [523.25, 659.25, 783.99].forEach((freq, i) => {
     const osc = audioCtx!.createOscillator();
     osc.type = "sine";
@@ -39,7 +38,6 @@ function playHitSound() {
   if (!audioCtx) audioCtx = new AudioContext();
   if (audioCtx.state === "suspended") audioCtx.resume();
   const now = audioCtx.currentTime;
-
   [220, 155].forEach((freq, i) => {
     const osc = audioCtx!.createOscillator();
     osc.type = "sawtooth";
@@ -51,6 +49,24 @@ function playHitSound() {
     g.connect(audioCtx!.destination);
     osc.start(now);
     osc.stop(now + 0.3);
+  });
+}
+
+function playLoseSound() {
+  if (!audioCtx) audioCtx = new AudioContext();
+  if (audioCtx.state === "suspended") audioCtx.resume();
+  const now = audioCtx.currentTime;
+  [440, 330, 220].forEach((freq, i) => {
+    const osc = audioCtx!.createOscillator();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(freq, now + i * 0.15);
+    const g = audioCtx!.createGain();
+    g.gain.setValueAtTime(0.07, now + i * 0.15);
+    g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.4);
+    osc.connect(g);
+    g.connect(audioCtx!.destination);
+    osc.start(now + i * 0.15);
+    osc.stop(now + i * 0.15 + 0.4);
   });
 }
 
@@ -75,6 +91,12 @@ interface TriData {
   hit: boolean;
 }
 
+interface SqData {
+  x: number;
+  y: number;
+  id: number;
+}
+
 export default function CollectibleGame({ gameMode }: Props) {
   const [count, setCount] = useState(0);
   const [ball, setBall] = useState(randPos);
@@ -82,12 +104,33 @@ export default function CollectibleGame({ gameMode }: Props) {
   const [pop, setPop] = useState(false);
   const [tris, setTris] = useState<TriData[]>([]);
   const trisRef = useRef<TriData[]>([]);
+  const [squares, setSquares] = useState<SqData[]>([]);
+  const squaresRef = useRef<SqData[]>([]);
   const triIdCounter = useRef(0);
+  const sqIdCounter = useRef(0);
   const nextSpawn = useRef(5);
+  const nextSqSpawn = useRef(10);
   const countRef = useRef(0);
   const submittedRef = useRef(0);
   const gameModeRef = useRef(gameMode);
+  const [lives, setLives] = useState(3);
+  const livesRef = useRef(3);
+  const [gameOver, setGameOver] = useState(false);
+  const gameOverRef = useRef(false);
   gameModeRef.current = gameMode;
+
+  const resetAll = () => {
+    countRef.current = 0;
+    setCount(0);
+    submittedRef.current = 0;
+    trisRef.current = [];
+    setTris([]);
+    squaresRef.current = [];
+    setSquares([]);
+    ballRef.current = randPos();
+    setBall(randPos());
+    nextSpawn.current = 5;
+  };
 
   useEffect(() => {
     let raf: number;
@@ -95,8 +138,9 @@ export default function CollectibleGame({ gameMode }: Props) {
       const cx = cursorPos.x;
       const cy = cursorPos.y;
       const gm = gameModeRef.current;
+      const go = gameOverRef.current;
 
-      if (gm) {
+      if (gm && !go) {
         const b = ballRef.current;
         const dx = cx - (b.x + 0.5);
         const dy = cy - (b.y + 0.5);
@@ -109,14 +153,21 @@ export default function CollectibleGame({ gameMode }: Props) {
             const n = c + 1;
             countRef.current = n;
             if (gm && n - submittedRef.current >= 5) {
+              const delta = n - submittedRef.current;
               submittedRef.current = n;
-              submitPromo(5);
+              submitPromo(delta);
             }
             if (n >= nextSpawn.current) {
-              nextSpawn.current = n + 5;
+              nextSpawn.current = n + 5 + Math.floor(Math.random() * 3);
               const t: TriData = { ...randPos(), id: ++triIdCounter.current, hit: false };
               trisRef.current = [...trisRef.current, t];
               setTris(trisRef.current);
+            }
+            if (n >= nextSqSpawn.current) {
+              nextSqSpawn.current = n + 8 + Math.floor(Math.random() * 5);
+              const sq: SqData = { ...randPos(), id: ++sqIdCounter.current };
+              squaresRef.current = [...squaresRef.current, sq];
+              setSquares(squaresRef.current);
             }
             return n;
           });
@@ -145,6 +196,34 @@ export default function CollectibleGame({ gameMode }: Props) {
             break;
           }
         }
+
+        const sqArr = squaresRef.current;
+        for (let i = 0; i < sqArr.length; i++) {
+          const sq = sqArr[i];
+          const sdx = cx - (sq.x + 0.5);
+          const sdy = cy - (sq.y + 0.5);
+          if (sdx * sdx + sdy * sdy < 3.5 * 3.5) {
+            playLoseSound();
+            const lost = countRef.current;
+            if (lost > 0) {
+              submittedRef.current = 0;
+              submitPromo(-lost);
+            }
+            countRef.current = 0;
+            setCount(0);
+            const newLives = livesRef.current - 1;
+            livesRef.current = newLives;
+            setLives(newLives);
+            sqArr.splice(i, 1);
+            squaresRef.current = sqArr;
+            setSquares([...sqArr]);
+            if (newLives <= 0) {
+              gameOverRef.current = true;
+              setGameOver(true);
+            }
+            break;
+          }
+        }
       }
 
       raf = requestAnimationFrame(tick);
@@ -163,8 +242,7 @@ export default function CollectibleGame({ gameMode }: Props) {
           <div
             className={`rounded-full transition-transform duration-150 ${pop ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
             style={{
-              width: "14px",
-              height: "14px",
+              width: "14px", height: "14px",
               background: "radial-gradient(circle at 35% 35%, #8f8, #080)",
               boxShadow: "0 0 10px rgba(0,200,0,0.7)",
             }}
@@ -173,18 +251,13 @@ export default function CollectibleGame({ gameMode }: Props) {
       )}
 
       {gameMode && tris.map((t) => (
-        <div
-          key={t.id}
-          className="fixed pointer-events-none z-[9998] flex items-center justify-center"
+        <div key={t.id} className="fixed pointer-events-none z-[9998] flex items-center justify-center"
           style={{ left: `${t.x}%`, top: `${t.y}%` }}
         >
-          <div
-            className={`transition-transform duration-150 ${t.hit ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
+          <div className={`transition-transform duration-150 ${t.hit ? "scale-150 opacity-0" : "scale-100 opacity-100"}`}
             style={{
-              width: 0,
-              height: 0,
-              borderLeft: "7px solid transparent",
-              borderRight: "7px solid transparent",
+              width: 0, height: 0,
+              borderLeft: "7px solid transparent", borderRight: "7px solid transparent",
               borderBottom: "14px solid #f44",
               filter: "drop-shadow(0 0 6px rgba(255,50,50,0.7))",
             }}
@@ -192,9 +265,53 @@ export default function CollectibleGame({ gameMode }: Props) {
         </div>
       ))}
 
-      <div className="fixed top-4 left-4 z-[9999] font-heading text-xs tracking-[3px] text-[var(--parch)] bg-[var(--ink2)] border border-[var(--mag)]/20 rounded px-3 py-1.5 select-none">
-        ✦ {count}
-      </div>
+      {gameMode && squares.map((sq) => (
+        <div key={sq.id} className="fixed pointer-events-none z-[9998] flex items-center justify-center"
+          style={{ left: `${sq.x}%`, top: `${sq.y}%` }}
+        >
+          <div
+            className="transition-transform duration-200 animate-pulse"
+            style={{
+              width: "16px", height: "16px",
+              background: "#8b00ff",
+              boxShadow: "0 0 14px rgba(139,0,255,0.9), inset 0 0 4px rgba(255,255,255,0.3)",
+              borderRadius: "2px",
+            }}
+          />
+        </div>
+      ))}
+
+      {gameMode && (
+        <div className="fixed top-4 left-4 z-[9999] font-heading text-xs tracking-[3px] text-[var(--parch)] bg-[var(--ink2)] border border-[var(--mag)]/20 rounded px-3 py-1.5 select-none flex items-center gap-3">
+          <span>✦ {count}</span>
+          <span className="text-white/40">|</span>
+          <span>{Array.from({ length: 3 }, (_, i) =>
+            <span key={i} className={i < lives ? "text-red-400" : "text-white/10"}>{i < lives ? "❤️" : "🖤"}</span>
+          )}</span>
+        </div>
+      )}
+
+      {gameMode && gameOver && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60">
+          <div className="bg-[var(--ink2)] border border-[var(--mag)]/30 rounded-xl p-6 text-center space-y-3 max-w-xs">
+            <p className="text-3xl">💀</p>
+            <p className="text-white/90 font-heading text-sm tracking-wide">GAME OVER</p>
+            <p className="text-white/50 text-xs">Perdiste todas tus vidas. Puntos acumulados: <span className="text-[var(--mag)]">✦ {count}</span></p>
+            <button
+              onClick={() => {
+                gameOverRef.current = false;
+                setGameOver(false);
+                livesRef.current = 3;
+                setLives(3);
+                resetAll();
+              }}
+              className="px-4 py-2 rounded-lg bg-[var(--mag)] text-white font-semibold text-xs hover:brightness-110 transition"
+            >
+              Reintentar
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
